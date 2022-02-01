@@ -1,0 +1,39 @@
+2021-02-21 21:09:03.697 -05:00 [INF] gb-api Microsoft.AspNetCore.Builder.IApplicationBuilder Migrating database...
+2021-02-21 21:09:04.850 -05:00 [INF] gb-api Microsoft.AspNetCore.Builder.IApplicationBuilder Database migrated
+2021-02-21 21:09:04.855 -05:00 [INF] gb-api Microsoft.AspNetCore.Builder.IApplicationBuilder Seeding database...
+2021-02-21 21:09:04.864 -05:00 [INF] gb-api AndcultureCode.CSharp.Core.SeedsBase [Seed:SeedUsers] Started
+2021-02-21 21:09:05.160 -05:00 [INF] gb-api AndcultureCode.CSharp.Core.SeedsBase [Seed:SeedUsers] Finished
+2021-02-21 21:09:05.165 -05:00 [INF] gb-api Microsoft.AspNetCore.Builder.IApplicationBuilder Database seeded
+2021-02-21 21:09:05.190 -05:00 [INF] gb-api Hangfire.SqlServer.SqlServerObjectsInstaller Start installing Hangfire SQL objects...
+2021-02-21 21:09:05.527 -05:00 [INF] gb-api Hangfire.SqlServer.SqlServerObjectsInstaller Hangfire SQL objects installed.
+2021-02-21 21:09:05.557 -05:00 [INF] gb-api Hangfire.BackgroundJobServer Starting Hangfire Server using job storage: 'SQL Server: .@GravityBootsApi'
+2021-02-21 21:09:05.562 -05:00 [INF] gb-api Hangfire.BackgroundJobServer Using the following options for SQL Server job storage: Queue poll interval: 00:00:00.
+2021-02-21 21:09:05.566 -05:00 [INF] gb-api Hangfire.BackgroundJobServer Using the following options for Hangfire Server:
+    Worker count: 4
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2021-02-21 21:09:05.774 -05:00 [INF] gb-api Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager User profile is available. Using 'C:\Users\dylan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-02-21 21:09:05.783 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad successfully announced in 199.2634 ms
+2021-02-21 21:09:05.789 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2021-02-21 21:09:05.806 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad all the dispatchers started
+2021-02-21 21:09:05.887 -05:00 [INF] gb-api Hangfire.BackgroundJobServer Starting Hangfire Server using job storage: 'SQL Server: .@GravityBootsApi'
+2021-02-21 21:09:05.890 -05:00 [INF] gb-api Hangfire.BackgroundJobServer Using the following options for SQL Server job storage: Queue poll interval: 00:00:00.
+2021-02-21 21:09:05.894 -05:00 [INF] gb-api Hangfire.BackgroundJobServer Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2021-02-21 21:09:05.907 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d successfully announced in 5.3553 ms
+2021-02-21 21:09:05.910 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2021-02-21 21:09:05.927 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d all the dispatchers started
+2021-02-21 21:11:27.692 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad caught stopping signal...
+2021-02-21 21:11:27.718 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad caught stopped signal...
+2021-02-21 21:11:27.727 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d caught stopping signal...
+2021-02-21 21:11:27.735 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d caught stopped signal...
+2021-02-21 21:11:28.166 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad All dispatchers stopped
+2021-02-21 21:11:28.177 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad successfully reported itself as stopped in 3.3526 ms
+2021-02-21 21:11:28.183 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:66b737ad has been stopped in total 470.4725 ms
+2021-02-21 21:11:28.235 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d All dispatchers stopped
+2021-02-21 21:11:28.245 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d successfully reported itself as stopped in 1.7933 ms
+2021-02-21 21:11:28.250 -05:00 [INF] gb-api Hangfire.Server.BackgroundServerProcess Server justice-pc:12216:247bbb3d has been stopped in total 518.6301 ms
