@@ -372,8 +372,8 @@ MigrationBackup/
 
 # Frontend
 # dependencies
-frontend//node_modules
-frontend//.pnp
+frontend/node_modules
+frontend/.pnp
 frontend/.pnp.js
 
 # testing
