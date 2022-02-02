@@ -53,7 +53,8 @@ namespace AndcultureCode.GB.Infrastructure.Data.SqlServer
                 optionsBuilder.UseLoggerFactory(_loggerFactory);
             }
 
-            optionsBuilder.UseSqlServer(_connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null));
+            optionsBuilder.UseNpgsql(_connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null));
+
         }
 
         /// <summary>
