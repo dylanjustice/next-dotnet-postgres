@@ -130,7 +130,7 @@ namespace AndcultureCode.GB.Infrastructure.Data.SqlServer
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public new IQueryable<T> Query<T>() where T : class => base.Set<T>();
+        public IQueryable<T> Query<T>() where T : class => base.Set<T>();
 
         /// <summary>
         /// Gets the context ready for updating the entity, does not save the changes on the context
