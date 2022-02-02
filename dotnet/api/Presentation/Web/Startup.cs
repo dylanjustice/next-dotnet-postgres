@@ -88,9 +88,8 @@ namespace AndcultureCode.GB.Presentation.Web
                 config.Filters.Add(new AuthorizeFilter(policy));
                 config.Filters.Add(new ValidationFilter());
             })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .AddViewLocalization().AddDataAnnotationsLocalization();
+            .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>())
+            .AddViewLocalization().AddDataAnnotationsLocalization();
 
             services.AddAndcultureCodeLocalization();
             services.AddApi(_configuration, _environment);
