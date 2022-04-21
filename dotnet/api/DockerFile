@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine as base
+
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
+
+WORKDIR /
