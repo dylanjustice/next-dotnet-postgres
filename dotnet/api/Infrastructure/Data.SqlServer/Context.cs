@@ -53,8 +53,7 @@ namespace AndcultureCode.GB.Infrastructure.Data.SqlServer
                 optionsBuilder.UseLoggerFactory(_loggerFactory);
             }
 
-            optionsBuilder.UseNpgsql(_connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null));
-
+            optionsBuilder.UseSqlServer(_connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null));
         }
 
         /// <summary>
@@ -130,7 +129,7 @@ namespace AndcultureCode.GB.Infrastructure.Data.SqlServer
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IQueryable<T> Query<T>() where T : class => base.Set<T>();
+        public new IQueryable<T> Query<T>() where T : class => base.Set<T>();
 
         /// <summary>
         /// Gets the context ready for updating the entity, does not save the changes on the context

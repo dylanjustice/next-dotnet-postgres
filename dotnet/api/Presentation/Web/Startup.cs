@@ -45,6 +45,7 @@ namespace AndcultureCode.GB.Presentation.Web
         public IConfigurationRoot _configuration { get; }
         public IHostEnvironment _environment { get; }
         public IStringLocalizer _localizer { get; set; }
+        public IServiceProvider _serviceProvider { get; set; }
 
         #endregion Properties
 
@@ -88,9 +89,11 @@ namespace AndcultureCode.GB.Presentation.Web
                 config.Filters.Add(new AuthorizeFilter(policy));
                 config.Filters.Add(new ValidationFilter());
             })
-            .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>())
-            .AddViewLocalization().AddDataAnnotationsLocalization();
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .AddViewLocalization().AddDataAnnotationsLocalization();
 
+            services.AddHealthChecks();
             services.AddAndcultureCodeLocalization();
             services.AddApi(_configuration, _environment);
             services.AddBackgroundWorkers(_configuration);
@@ -99,7 +102,9 @@ namespace AndcultureCode.GB.Presentation.Web
                 .AddGoogleOAuth(_configuration)
                 .AddMicrosoftOAuth(_configuration);
             services.AddForwardedHeaders();
-            services.AddSerilogServices(_configuration);
+            services.AddApplicationInsightsTelemetry(); // Must be registered before Serilog provider
+            services.AddSerilogServices(_configuration, _environment);
+            services.AddBackgroundWorkerServer(_configuration);
 
             // Caching
             services.AddMemoryCache();
@@ -165,7 +170,7 @@ namespace AndcultureCode.GB.Presentation.Web
                 app.UseHsts();
             }
 
-            app.UseBackgroundWorkerServer(_configuration);
+            app.UseHangfireDashboard(_configuration);
             app.UseGlobalExceptionHandler();
             app.UseHttpsRedirection();
 
@@ -195,6 +200,7 @@ namespace AndcultureCode.GB.Presentation.Web
 
             app.UseEndpoints(routes =>
             {
+                routes.MapHealthChecks("/health");
                 routes.MapControllerRoute(
                     name: "mvc controllers",
                     pattern: "{controller}/{action=Index}/{id?}"
@@ -222,7 +228,7 @@ namespace AndcultureCode.GB.Presentation.Web
             });
 
             // Register Background Jobs
-            ConfigureBackgroundJobs(app, env, workerProvider);
+            // ConfigureBackgroundJobs(app, env, workerProvider);
         }
 
         public virtual void ConfigureBackgroundJobs(
