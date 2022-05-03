@@ -22,9 +22,4 @@
     <ProjectReference Include="..\..\Business\Core\Core.csproj"/>
     <ProjectReference Include="..\..\Infrastructure\Data.SqlServer\Data.SqlServer.csproj"/>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include=".\xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 </Project>
