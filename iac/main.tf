@@ -2,7 +2,22 @@
 
 locals {
   cidr_block  = "10.0.0.0/16"
+  s3_origin_id = "djustice-nextapp"
+
+  tags = {
+    project = "next-dotnet-postgres"
+  }
 }
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "djustice-gb-logs"
+}
+
+resource "aws_s3_bucket_acl" "logs_acl" {
+  bucket = aws_s3_bucket.logs.id
+  acl    = "private"
+}
+
 # IAM
 
 
@@ -51,7 +66,7 @@ resource "aws_subnet" "elb_2" {
 }
 
 resource "aws_security_group" "db" {
-  name        = "db-${var.environment}"
+  name        = "sg-gravityboots-db-${var.environment}"
   description = "Traffic to the database"
   vpc_id      = aws_vpc.main.id
   ingress {
@@ -78,15 +93,15 @@ resource "aws_db_instance" "db" {
   allocated_storage      = 10
   availability_zone      = "us-east-1a"
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
-  engine                 = "aurora-postgresql"
-  engine_version         = 12.6
+  engine                 = "postgres"
+  engine_version         = 14.2
   instance_class         = "db.t3.medium"
   password               = var.db_password
   publicly_accessible    = true
   skip_final_snapshot    = true
   username               = var.db_username
   vpc_security_group_ids = [aws_security_group.db.id]
-  identifier             = "boots-${var.environment}-db"
+  identifier             = "db-gravitybootsapi-db-${var.environment}"
 }
 
 # EC2
@@ -115,8 +130,57 @@ resource "aws_security_group" "allow_tls" {
 
 # API
 # Elastic container registry
+resource "aws_ecr_repository" "repo" {
+  name = "ecr-gravityboots"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  encryption_configuration {
+    encryption_type = "KMS"
+  }
+  tags = local.tags
+}
 
 # ECS
+
+resource "aws_ecs_cluster" "api" {
+  name = "cluster-gb-api"
+
+  setting {
+    name = "containerInsights"
+    value = "enabled"
+  }
+  tags = local.tags
+}
+
+resource "aws_ecs_cluster_capacity_providers" "api" {
+  cluster_name = aws_ecs_cluster.api.name
+  capacity_providers = ["FARGATE"]
+  default_capacity_provider_strategy {
+    base = 1
+    weight = 100
+    capacity_provider = "FARGATE"
+  }
+}
+
+resource "aws_ecs_task_definition" "api" {
+  family = "taskdef-gbapi-${var.environment}"
+  requires_compatibilities = ["FARGATE"]
+  container_definitions = jsonencode([
+    {
+      name = "dotnet-api"
+      image = ""
+    }
+  ])
+}
+
+resource "aws_ecs_service" "api" {
+  name = "service-gb-api-${var.environment}"
+  cluster = aws_ecs_cluster.api.id
+  task_definition = aws_ecs_task_definition.api.id
+}
 
 
 # Frontend
@@ -131,10 +195,10 @@ resource "aws_s3_bucket_acl" "b_acl" {
   acl    = "private"
 }
 
-resource "aws_iam_policy_document" "s3_policy" {
+data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions  = ["s3:GetObject"]
-    resource = ["${aws_s3_bucket.b.arn}/*"]
+    resources = ["${aws_s3_bucket.b.arn}/*"]
     principals {
       type        = "AWS"
       identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
@@ -144,7 +208,7 @@ resource "aws_iam_policy_document" "s3_policy" {
 
 resource "aws_s3_bucket_policy" "b_policy" {
   bucket = aws_s3_bucket.b.id
-  policy = aws_iam_policy_document.s3_policy.json
+  policy = data.aws_iam_policy_document.s3_policy.json
 }
 
 
@@ -164,11 +228,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "mylogs.s3.amazonaws.com"
-    prefix          = "myprefix"
+    bucket          = "djustice-gb-logs.s3.amazonaws.com"
+    prefix          = "cloudfront"
   }
 
-  aliases = ["mysite.example.com", "yoursite.example.com"]
+  aliases = []
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
