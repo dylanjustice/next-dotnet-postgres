@@ -25,6 +25,7 @@ using AndcultureCode.CSharp.Extensions;
 using AndcultureCode.CSharp.Core.Utilities.Configuration;
 using AndcultureCode.CSharp.Data.Extensions;
 using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
+using Microsoft.EntityFrameworkCore;
 
 namespace DylanJustice.Demo.Presentation.Web
 {
@@ -143,13 +144,11 @@ namespace DylanJustice.Demo.Presentation.Web
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var serviceProvider = serviceScope.ServiceProvider;
-
-                app.ConfigureDatabase<GBApiContext>(
-                    serviceProvider,
-                    migrate: true,
-                    seeds: null
-                );
+                using (var context = serviceScope.ServiceProvider.GetService<GBApiContext>())
+                {
+                    context.Database.SetCommandTimeout(30);
+                    context.Database.Migrate();
+                }
             }
 
             app.UseForwardedHeaders();
