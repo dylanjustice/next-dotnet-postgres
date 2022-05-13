@@ -5,11 +5,11 @@ using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 using AndcultureCode.CSharp.Core.Utilities.Security;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Domain.Users;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
 using Microsoft.Extensions.Localization;
 
-namespace AndcultureCode.GB.Business.Conductors.Domain.UserLogins
+namespace DylanJustice.Demo.Business.Conductors.Domain.UserLogins
 {
     public class UserLoginConductor<TUser> : IUserLoginConductor<TUser>
         where TUser : User

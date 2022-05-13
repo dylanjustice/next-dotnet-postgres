@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Kop
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Kop
 {
     public class KopController : AndcultureCode.CSharp.Web.Controllers.Controller
     {

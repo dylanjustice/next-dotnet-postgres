@@ -3,10 +3,10 @@ using AndcultureCode.CSharp.Core.Interfaces;
 using AndcultureCode.CSharp.Core.Interfaces.Data;
 using AndcultureCode.CSharp.Core.Models.Entities;
 using AndcultureCode.CSharp.Testing.Tests;
-using AndcultureCode.GB.Testing.Extensions;
+using DylanJustice.Demo.Testing.Extensions;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Testing.Tests
+namespace DylanJustice.Demo.Testing.Tests
 {
     public class ApiIntegrationTest : BaseIntegrationTest
     {

@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using AndcultureCode.GB.Presentation.Web.Attributes;
+using DylanJustice.Demo.Presentation.Web.Attributes;
 using Microsoft.Extensions.Logging;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.SystemSettings;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.SystemSettings;
 using AndcultureCode.CSharp.Extensions;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.SystemSettings
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.SystemSettings
 {
     [FormatFilter]
     [NoCache]

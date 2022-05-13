@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using AndcultureCode.CSharp.Core.Models.Security;
 using AndcultureCode.CSharp.Core.Enumerations;
 
-namespace AndcultureCode.GB.Presentation.Web.Requirements
+namespace DylanJustice.Demo.Presentation.Web.Requirements
 {
     public class AclAuthorizationRequirement : IAuthorizationRequirement
     {

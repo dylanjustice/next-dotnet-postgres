@@ -4,7 +4,7 @@ using AndcultureCode.CSharp.Core.Utilities.Localization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 
-namespace AndcultureCode.GB.Presentation.Web.Middleware.Localization
+namespace DylanJustice.Demo.Presentation.Web.Middleware.Localization
 {
     public class JsonRequestCultureProvider : RequestCultureProvider
     {

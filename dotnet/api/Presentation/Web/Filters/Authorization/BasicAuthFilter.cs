@@ -4,14 +4,14 @@ using System;
 using System.Net.Http.Headers;
 using System.Net;
 using System.Text;
-using AndcultureCode.GB.Business.Core.Models.Configuration;
+using DylanJustice.Demo.Business.Core.Models.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using AndcultureCode.GB.Presentation.Web.Extensions;
+using DylanJustice.Demo.Presentation.Web.Extensions;
 using AndcultureCode.CSharp.Core.Models.Configuration;
 
-namespace AndcultureCode.GB.Presentation.Web.Filters.Authorization
+namespace DylanJustice.Demo.Presentation.Web.Filters.Authorization
 {
     /// <summary>
     /// TODO: Extract to AndcultureCode.CSharp.Web

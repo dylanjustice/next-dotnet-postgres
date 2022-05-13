@@ -6,14 +6,14 @@ using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 using AndcultureCode.CSharp.Extensions;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Jobs;
-using AndcultureCode.GB.Business.Core.Interfaces.Workers;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Workers;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 using Hangfire;
 using Microsoft.Extensions.Localization;
 using AndcultureCode.CSharp.Core.Interfaces.Providers.Worker;
 
-namespace AndcultureCode.GB.Business.Conductors.Domain.Jobs
+namespace DylanJustice.Demo.Business.Conductors.Domain.Jobs
 {
     // TODO: Console.WriteLines should be updated after a logging strategy is complete.
     // They have been kept as a guideline for possible logging information.

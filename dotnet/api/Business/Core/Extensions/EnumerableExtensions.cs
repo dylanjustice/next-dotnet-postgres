@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AndcultureCode.GB.Business.Core.Extensions
+namespace DylanJustice.Demo.Business.Core.Extensions
 {
     // TODO: Move to AndcultureCode.CSharp.Extensions
     public static class EnumerableExtensions

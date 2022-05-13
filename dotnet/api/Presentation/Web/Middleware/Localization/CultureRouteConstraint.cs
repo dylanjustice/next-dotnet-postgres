@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using AndcultureCode.GB.Presentation.Web.Constants;
+using DylanJustice.Demo.Presentation.Web.Constants;
 using AndcultureCode.CSharp.Core.Utilities.Localization;
 
-namespace AndcultureCode.GB.Presentation.Web.Middleware.Localization
+namespace DylanJustice.Demo.Presentation.Web.Middleware.Localization
 {
     public class CultureRouteConstraint : IRouteConstraint
     {

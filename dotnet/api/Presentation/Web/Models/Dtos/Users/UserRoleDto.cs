@@ -1,5 +1,5 @@
 using System;
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos.Users
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos.Users
 {
     /// <summary>
     /// Bridge entity between a given user and role

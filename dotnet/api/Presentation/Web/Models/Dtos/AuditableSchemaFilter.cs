@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos
 {
     /// <summary>
     /// Sets properties to readonly so Swagger-UI ignores them for post/put requests

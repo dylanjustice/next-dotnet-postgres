@@ -8,7 +8,7 @@ using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces;
 using Newtonsoft.Json;
 
-namespace AndcultureCode.GB.Business.Core.Extensions
+namespace DylanJustice.Demo.Business.Core.Extensions
 {
     public static class StringExtensions
     {

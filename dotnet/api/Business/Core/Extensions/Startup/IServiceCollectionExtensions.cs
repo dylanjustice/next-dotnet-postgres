@@ -1,11 +1,11 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AndcultureCode.GB.Business.Core.Providers.Logging;
+using DylanJustice.Demo.Business.Core.Providers.Logging;
 using Serilog;
 using Microsoft.Extensions.Hosting;
 
-namespace AndcultureCode.GB.Business.Core.Extensions.Startup
+namespace DylanJustice.Demo.Business.Core.Extensions.Startup
 {
     public static class IServiceCollectionExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace AndcultureCode.GB.Presentation.Web.Models.Dtos.SystemSettings
+﻿namespace DylanJustice.Demo.Presentation.Web.Models.Dtos.SystemSettings
 {
     public class SystemSettingsDto
     {

@@ -1,13 +1,13 @@
-using AndcultureCode.GB.Business.Core.Extensions;
+using DylanJustice.Demo.Business.Core.Extensions;
 using Shouldly;
-using AndcultureCode.GB.Testing.Tests;
+using DylanJustice.Demo.Testing.Tests;
 using Xunit;
 using Xunit.Abstractions;
 using System;
 using System.Linq;
 using AndcultureCode.CSharp.Testing.Extensions;
 
-namespace AndcultureCode.GB.Business.Core.Tests.Unit.Extensions
+namespace DylanJustice.Demo.Business.Core.Tests.Unit.Extensions
 {
     public class StringExtensionsTest : ApiUnitTest
     {

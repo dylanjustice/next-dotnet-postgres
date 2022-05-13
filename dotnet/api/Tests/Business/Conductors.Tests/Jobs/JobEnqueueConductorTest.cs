@@ -3,21 +3,21 @@ using AndcultureCode.CSharp.Testing.Extensions;
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 using AndcultureCode.CSharp.Testing.Tests;
-using AndcultureCode.GB.Business.Conductors.Domain.Jobs;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Conductors.Domain.Jobs;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 using Xunit;
 using Xunit.Abstractions;
 using Moq;
 using Bogus;
 using Shouldly;
-using AndcultureCode.GB.Business.Core.Interfaces.Workers;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Workers;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Jobs;
 using AndcultureCode.CSharp.Testing.Extensions.Mocks.Conductors;
 using System;
 using Microsoft.Extensions.Localization;
 using AndcultureCode.CSharp.Core.Interfaces.Providers.Worker;
 
-namespace AndcultureCode.GB.Business.Conductors.Tests.Integration.Jobs
+namespace DylanJustice.Demo.Business.Conductors.Tests.Integration.Jobs
 {
     public class JobEnqueueConductorTest : BaseUnitTest
     {

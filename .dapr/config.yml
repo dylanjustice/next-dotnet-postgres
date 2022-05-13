@@ -1,0 +1,19 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: featureconfig
+spec:
+  tracing:
+    samplingRate: "1"
+    zipkin:
+      endpointAddress: http://localhost:9411/api/v2/spans
+  features:
+    - name: Resiliency
+      enabled: true
+  targets:
+    apps:
+      dotnet:
+        timeout: general
+        retry: general
+        circuitBreaker: general
+

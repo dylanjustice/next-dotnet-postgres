@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Localization;
 
-namespace AndcultureCode.GB.Presentation.Web.Middleware.Localization
+namespace DylanJustice.Demo.Presentation.Web.Middleware.Localization
 {
     public class JsonStringLocalizerFactory : IStringLocalizerFactory
     {

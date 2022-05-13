@@ -3,7 +3,7 @@ using System.Linq;
 using AndcultureCode.CSharp.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace AndcultureCode.GB.Business.Core.Extensions
+namespace DylanJustice.Demo.Business.Core.Extensions
 {
     public static class LoggerExtensions
     {

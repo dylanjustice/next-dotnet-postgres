@@ -4,7 +4,7 @@ using AndcultureCode.CSharp.Core.Interfaces;
 using AndcultureCode.CSharp.Core.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace AndcultureCode.GB.Presentation.Web.Extensions.Validation
+namespace DylanJustice.Demo.Presentation.Web.Extensions.Validation
 {
     public static class ModelStateExtensions
     {

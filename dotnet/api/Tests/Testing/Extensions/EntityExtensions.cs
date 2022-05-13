@@ -4,10 +4,10 @@ using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces;
 using AndcultureCode.CSharp.Core.Models;
 using AndcultureCode.CSharp.Core.Models.Entities;
-using AndcultureCode.GB.Business.Core.Models.Entities;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer.Repositories;
+using DylanJustice.Demo.Business.Core.Models.Entities;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql.Repositories;
 
-namespace AndcultureCode.GB.Testing.Extensions
+namespace DylanJustice.Demo.Testing.Extensions
 {
     public static class EntityExtensions
     {

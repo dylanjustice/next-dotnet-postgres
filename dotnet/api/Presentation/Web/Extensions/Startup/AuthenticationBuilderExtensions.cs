@@ -7,15 +7,15 @@ using AndcultureCode.CSharp.Core.Interfaces.Authentication;
 using AndcultureCode.CSharp.Web.Constants;
 using AndcultureCode.CSharp.Web.Middleware;
 using AndcultureCode.CSharp.Web.Models.Dtos.Authentication;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
-using AndcultureCode.GB.Presentation.Web.Constants;
-using AndcultureCode.GB.Presentation.Web.Middleware.Authentication;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Presentation.Web.Constants;
+using DylanJustice.Demo.Presentation.Web.Middleware.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AndcultureCode.GB.Presentation.Web.Extensions.Startup
+namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
 {
     #region Public Methods
 

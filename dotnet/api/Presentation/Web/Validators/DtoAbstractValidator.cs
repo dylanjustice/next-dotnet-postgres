@@ -2,11 +2,11 @@ using System;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Newtonsoft.Json;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos;
 using AndcultureCode.CSharp.Core.Utilities.Network;
 using AndcultureCode.CSharp.Core.Utilities.Security;
 
-namespace AndcultureCode.GB.Presentation.Web.Validators
+namespace DylanJustice.Demo.Presentation.Web.Validators
 {
     public abstract class DtoAbstractValidator<T> : AbstractValidator<T>
     {

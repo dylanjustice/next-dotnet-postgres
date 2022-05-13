@@ -7,5 +7,5 @@ RUN dotnet publish --configuration release -o release
 FROM bitnami/aspnet-core:5.0.16
 WORKDIR /api
 COPY --from=build /api/release .
-ENTRYPOINT [ "dotnet", "AndcultureCode.GB.Presentation.Web.dll" ]
+ENTRYPOINT [ "dotnet", "DylanJustice.Demo.Presentation.Web.dll" ]
 

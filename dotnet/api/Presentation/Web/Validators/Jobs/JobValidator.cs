@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using AndcultureCode.CSharp.Extensions;
 using FluentValidation;
 using Newtonsoft.Json;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Jobs;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Jobs;
 
-namespace AndcultureCode.GB.Presentation.Web.Validators.Jobs
+namespace DylanJustice.Demo.Presentation.Web.Validators.Jobs
 {
     public class JobValidator : DtoAbstractValidator<JobDto>
     {

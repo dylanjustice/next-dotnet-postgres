@@ -1,7 +1,7 @@
 
 
 locals {
-  cidr_block  = "10.0.0.0/16"
+  cidr_block   = "10.0.0.0/16"
   s3_origin_id = "djustice-nextapp"
 
   tags = {
@@ -102,6 +102,7 @@ resource "aws_db_instance" "db" {
   username               = var.db_username
   vpc_security_group_ids = [aws_security_group.db.id]
   identifier             = "db-gravitybootsapi-db-${var.environment}"
+  multi_az               = var.environment == "production" ? true : false
 }
 
 # EC2
@@ -131,7 +132,7 @@ resource "aws_security_group" "allow_tls" {
 # API
 # Elastic container registry
 resource "aws_ecr_repository" "repo" {
-  name = "ecr-gravityboots"
+  name                 = "ecr-gravityboots"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -149,36 +150,36 @@ resource "aws_ecs_cluster" "api" {
   name = "cluster-gb-api"
 
   setting {
-    name = "containerInsights"
+    name  = "containerInsights"
     value = "enabled"
   }
   tags = local.tags
 }
 
 resource "aws_ecs_cluster_capacity_providers" "api" {
-  cluster_name = aws_ecs_cluster.api.name
+  cluster_name       = aws_ecs_cluster.api.name
   capacity_providers = ["FARGATE"]
   default_capacity_provider_strategy {
-    base = 1
-    weight = 100
+    base              = 1
+    weight            = 100
     capacity_provider = "FARGATE"
   }
 }
 
 resource "aws_ecs_task_definition" "api" {
-  family = "taskdef-gbapi-${var.environment}"
+  family                   = "taskdef-gbapi-${var.environment}"
   requires_compatibilities = ["FARGATE"]
   container_definitions = jsonencode([
     {
-      name = "dotnet-api"
+      name  = "dotnet-api"
       image = ""
     }
   ])
 }
 
 resource "aws_ecs_service" "api" {
-  name = "service-gb-api-${var.environment}"
-  cluster = aws_ecs_cluster.api.id
+  name            = "service-gb-api-${var.environment}"
+  cluster         = aws_ecs_cluster.api.id
   task_definition = aws_ecs_task_definition.api.id
 }
 
@@ -197,7 +198,7 @@ resource "aws_s3_bucket_acl" "b_acl" {
 
 data "aws_iam_policy_document" "s3_policy" {
   statement {
-    actions  = ["s3:GetObject"]
+    actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.b.arn}/*"]
     principals {
       type        = "AWS"
@@ -228,7 +229,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "djustice-gb-logs.s3.amazonaws.com"
+    bucket          = aws_s3_bucket.logs.bucket_domain_name
     prefix          = "cloudfront"
   }
 

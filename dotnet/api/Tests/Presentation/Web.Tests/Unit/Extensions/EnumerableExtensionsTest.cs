@@ -5,7 +5,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Business.Core.Tests.Unit.Extensions
+namespace DylanJustice.Demo.Business.Core.Tests.Unit.Extensions
 {
     public class EnumerableExtensionsTest : BaseUnitTest
     {

@@ -1,13 +1,13 @@
 ﻿using FluentValidation.TestHelper;
-using AndcultureCode.GB.Business.Core.Models.Configuration;
-using AndcultureCode.GB.Presentation.Web.Validators.Roles;
+using DylanJustice.Demo.Business.Core.Models.Configuration;
+using DylanJustice.Demo.Presentation.Web.Validators.Roles;
 using System;
-using AndcultureCode.GB.Testing.Tests;
+using DylanJustice.Demo.Testing.Tests;
 using Xunit;
 using Xunit.Abstractions;
 using AndcultureCode.CSharp.Core.Models.Configuration;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Unit.Validators.Roles
+namespace DylanJustice.Demo.Presentation.Web.Tests.Unit.Validators.Roles
 {
     public class RoleValidatorTest : ApiUnitTest, IDisposable
     {

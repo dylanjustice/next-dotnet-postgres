@@ -6,7 +6,7 @@ using AndcultureCode.CSharp.Core.Models;
 using Newtonsoft.Json;
 using AndcultureCode.CSharp.Core.Enumerations;
 
-namespace AndcultureCode.GB.Business.Core.Models.Jobs
+namespace DylanJustice.Demo.Business.Core.Models.Jobs
 {
     public class Job : Auditable
     {

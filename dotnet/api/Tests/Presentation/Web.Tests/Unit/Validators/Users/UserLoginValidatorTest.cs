@@ -1,11 +1,11 @@
 using System;
 using FluentValidation.TestHelper;
-using AndcultureCode.GB.Presentation.Web.Validators.Users;
-using AndcultureCode.GB.Testing.Tests;
+using DylanJustice.Demo.Presentation.Web.Validators.Users;
+using DylanJustice.Demo.Testing.Tests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Unit.Validators.Users
+namespace DylanJustice.Demo.Presentation.Web.Tests.Unit.Validators.Users
 {
     public class UserLoginValidatorTest : ApiUnitTest, IDisposable
     {

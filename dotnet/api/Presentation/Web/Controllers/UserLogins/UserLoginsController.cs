@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using AndcultureCode.GB.Presentation.Web.Attributes;
+using DylanJustice.Demo.Presentation.Web.Attributes;
 using AndcultureCode.CSharp.Core.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.UserLogins
+namespace DylanJustice.Demo.Presentation.Web.Controllers.UserLogins
 {
     [Route("userlogins")]
     public class UserLoginsController : AndcultureCode.CSharp.Web.Controllers.Controller

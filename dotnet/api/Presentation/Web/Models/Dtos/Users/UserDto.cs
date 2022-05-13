@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos.Users
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos.Users
 {
     public class UserDto : AuditableDto
     {

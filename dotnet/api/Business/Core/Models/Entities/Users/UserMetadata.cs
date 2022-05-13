@@ -1,8 +1,8 @@
-﻿using AndcultureCode.GB.Business.Core.Models.Entities.Roles;
+﻿using DylanJustice.Demo.Business.Core.Models.Entities.Roles;
 using AndcultureCode.CSharp.Core.Models;
 using AndcultureCode.CSharp.Core.Interfaces.Entity;
 
-namespace AndcultureCode.GB.Business.Core.Models.Entities.Users
+namespace DylanJustice.Demo.Business.Core.Models.Entities.Users
 {
     public class UserMetadata : Auditable, IUserMetadata
     {

@@ -2,10 +2,10 @@ using System.Reflection;
 using AndcultureCode.CSharp.Testing.Tests;
 using Microsoft.Extensions.Localization;
 using Moq;
-using AndcultureCode.GB.Testing.Tests;
+using DylanJustice.Demo.Testing.Tests;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Business.Conductors.Tests.Unit
+namespace DylanJustice.Demo.Business.Conductors.Tests.Unit
 {
     public class ConductorUnitTest : ApiUnitTest
     {

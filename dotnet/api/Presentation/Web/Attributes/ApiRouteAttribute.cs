@@ -1,8 +1,8 @@
 using System;
 using Microsoft.AspNetCore.Mvc.Routing;
-using AndcultureCode.GB.Presentation.Web.Constants;
+using DylanJustice.Demo.Presentation.Web.Constants;
 
-namespace AndcultureCode.GB.Presentation.Web.Attributes
+namespace DylanJustice.Demo.Presentation.Web.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class ApiRouteAttribute : Attribute, IRouteTemplateProvider

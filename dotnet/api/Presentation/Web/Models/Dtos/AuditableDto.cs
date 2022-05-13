@@ -1,7 +1,7 @@
 using System;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos;
 
-namespace AndcultureCode.GB.Presentation.Web.Models
+namespace DylanJustice.Demo.Presentation.Web.Models
 {
     public class AuditableDto : EntityDto
     {

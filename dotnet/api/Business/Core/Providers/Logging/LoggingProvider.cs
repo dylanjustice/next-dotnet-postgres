@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 
-namespace AndcultureCode.GB.Business.Core.Providers.Logging
+namespace DylanJustice.Demo.Business.Core.Providers.Logging
 {
     public class LoggingProvider
     {

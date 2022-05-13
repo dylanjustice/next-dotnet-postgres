@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Testing.Tests;
 using Newtonsoft.Json;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Business.Core.Tests.Unit.Models.Entities.Jobs
+namespace DylanJustice.Demo.Business.Core.Tests.Unit.Models.Entities.Jobs
 {
     public class JobTest : BaseUnitTest
     {

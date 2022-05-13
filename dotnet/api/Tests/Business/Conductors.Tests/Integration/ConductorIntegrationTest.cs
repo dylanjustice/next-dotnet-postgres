@@ -8,16 +8,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Moq;
-using AndcultureCode.GB.Business.Conductors.Extensions.Startup;
-using AndcultureCode.GB.Business.Core.Interfaces.Data;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer.Extensions;
-using AndcultureCode.GB.Testing.Tests;
-using AndcultureCode.GB.Tests.Testing.Fixtures;
+using DylanJustice.Demo.Business.Conductors.Extensions.Startup;
+using DylanJustice.Demo.Business.Core.Interfaces.Data;
+using DylanJustice.Demo.Testing.Tests;
+using DylanJustice.Demo.Tests.Testing.Fixtures;
 using Xunit.Abstractions;
 using AndcultureCode.CSharp.Core.Utilities.Configuration;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql.Extensions.Startup;
 
-namespace AndcultureCode.GB.Business.Conductors.Tests.Integration
+namespace DylanJustice.Demo.Business.Conductors.Tests.Integration
 {
     public class ConductorIntegrationTest<TSut> : ApiIntegrationTest, IDisposable
         where TSut : class
@@ -144,7 +144,7 @@ namespace AndcultureCode.GB.Business.Conductors.Tests.Integration
             ConfigureContexts(services);
 
             services
-                .AddSqlServer()
+                .AddPostgres(Configuration)
                 .AddConductors(Configuration);
 
 

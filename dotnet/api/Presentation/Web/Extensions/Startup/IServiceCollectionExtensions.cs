@@ -3,24 +3,21 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AndcultureCode.GB.Business.Conductors.Extensions.Startup;
-using AndcultureCode.GB.Business.Core.Interfaces.Data;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer.Extensions;
-using AndcultureCode.GB.Presentation.Web.Models;
+using DylanJustice.Demo.Business.Conductors.Extensions.Startup;
+using DylanJustice.Demo.Business.Core.Interfaces.Data;
+using DylanJustice.Demo.Presentation.Web.Models;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System;
-using AndcultureCode.GB.Presentation.Worker.Extensions;
 using AspNetCoreRateLimit;
 using Microsoft.Extensions.Hosting;
-using AndcultureCode.GB.Presentation.Web.Middleware.Localization;
+using DylanJustice.Demo.Presentation.Web.Middleware.Localization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
-using AndcultureCode.GB.Presentation.Web.Constants;
+using DylanJustice.Demo.Presentation.Web.Constants;
 using AndcultureCode.CSharp.Core.Utilities.Localization;
 using AndcultureCode.CSharp.Extensions;
 using AndcultureCode.CSharp.Core.Models.Mail;
@@ -28,8 +25,10 @@ using AndcultureCode.CSharp.Core.Models.Configuration;
 using AndcultureCode.CSharp.Web.Constants;
 using AndcultureCode.CSharp.Core.Constants;
 using AndcultureCode.CSharp.Core.Extensions;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql.Extensions.Startup;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
 
-namespace AndcultureCode.GB.Presentation.Web.Extensions.Startup
+namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
 {
     public static class IServiceCollectionExtensions
     {
@@ -44,11 +43,10 @@ namespace AndcultureCode.GB.Presentation.Web.Extensions.Startup
                     )
                 .AddContexts(configuration, environment.EnvironmentName)
                 .AddSeeding(configuration)
-                .AddSqlServer()
+                .AddPostgres(configuration)
                 .AddConductors(configuration)
                 .AddProviders()
                 .AddClients(configuration)
-                .AddWorkers()
                 .AddMiddleware(configuration);
 
             return services;

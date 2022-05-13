@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using AndcultureCode.GB.Presentation.Web.Extensions.Validation;
+using DylanJustice.Demo.Presentation.Web.Extensions.Validation;
 
-namespace AndcultureCode.GB.Presentation.Web.Filters.Validation
+namespace DylanJustice.Demo.Presentation.Web.Filters.Validation
 {
     public class ValidationFilter : ActionFilterAttribute
     {

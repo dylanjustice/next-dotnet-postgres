@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using AndcultureCode.GB.Business.Core.Extensions;
-using AndcultureCode.GB.Business.Core.Models.Security;
-using AndcultureCode.GB.Presentation.Web.Filters.Authorization;
-using AndcultureCode.GB.Presentation.Web.Requirements;
+using DylanJustice.Demo.Business.Core.Extensions;
+using DylanJustice.Demo.Business.Core.Models.Security;
+using DylanJustice.Demo.Presentation.Web.Filters.Authorization;
+using DylanJustice.Demo.Presentation.Web.Requirements;
 using System;
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core.Models.Security;
 using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Enumerations;
 
-namespace AndcultureCode.GB.Presentation.Web.Attributes
+namespace DylanJustice.Demo.Presentation.Web.Attributes
 {
     public class AclAuthorizeAttribute : TypeFilterAttribute
     {

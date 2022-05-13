@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using Moq;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Testing.Tests
+namespace DylanJustice.Demo.Testing.Tests
 {
     public class ApiUnitTest : BaseUnitTest
     {

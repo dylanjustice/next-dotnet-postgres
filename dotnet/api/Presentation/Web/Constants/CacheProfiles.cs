@@ -1,4 +1,4 @@
-namespace AndcultureCode.GB.Presentation.Web.Constants
+namespace DylanJustice.Demo.Presentation.Web.Constants
 {
     public static class CacheProfiles
     {

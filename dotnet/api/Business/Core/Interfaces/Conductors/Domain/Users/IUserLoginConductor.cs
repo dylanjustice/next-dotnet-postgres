@@ -1,8 +1,8 @@
 using AndcultureCode.CSharp.Core.Interfaces;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
 
-namespace AndcultureCode.GB.Business.Core.Interfaces.Conductors.Domain.Users
+namespace DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Users
 {
     public interface IUserLoginConductor<TUser> : IConductor
         where TUser : User

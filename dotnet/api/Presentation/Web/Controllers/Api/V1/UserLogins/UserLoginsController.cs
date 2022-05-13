@@ -7,22 +7,22 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
-using AndcultureCode.GB.Presentation.Web.Attributes;
-using AndcultureCode.GB.Presentation.Web.Controllers.Api.V1;
+using DylanJustice.Demo.Presentation.Web.Attributes;
+using DylanJustice.Demo.Presentation.Web.Controllers.Api.V1;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
 using Microsoft.Extensions.Localization;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Users;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Users;
 using AndcultureCode.CSharp.Core.Extensions;
 using Microsoft.Extensions.Logging;
-using AndcultureCode.GB.Presentation.Web.Middleware.Authentication;
+using DylanJustice.Demo.Presentation.Web.Middleware.Authentication;
 using AndcultureCode.CSharp.Core.Interfaces;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Domain.Users;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Users;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using AndcultureCode.CSharp.Business.Core.Models.Configuration;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.UserLogins
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.UserLogins
 {
     [ApiRoute("userlogins")]
     [FormatFilter]

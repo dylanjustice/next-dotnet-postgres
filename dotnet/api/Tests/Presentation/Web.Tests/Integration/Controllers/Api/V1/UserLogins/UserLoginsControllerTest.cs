@@ -1,21 +1,21 @@
 using Shouldly;
 using System;
-using AndcultureCode.GB.Presentation.Web.Tests.Extensions;
-using AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers;
+using DylanJustice.Demo.Tests.Presentation.Web.Tests.Integration.Controllers;
 using Xunit;
 using Xunit.Abstractions;
 using AndcultureCode.CSharp.Core.Models;
-using AndcultureCode.GB.Testing.Constants;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Users;
+using DylanJustice.Demo.Testing.Constants;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Users;
 using System.Linq;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Domain.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Users;
 using AndcultureCode.CSharp.Testing.Extensions;
-using AndcultureCode.GB.Business.Conductors.Domain.UserLogins;
-using AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.UserLogins;
+using DylanJustice.Demo.Business.Conductors.Domain.UserLogins;
+using DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.UserLogins;
 using Microsoft.AspNetCore.Mvc;
+using AndcultureCode.GB.Presentation.Web.Tests.Extensions;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Integration.Controllers.Api.V1.Roles
+namespace DylanJustice.Demo.Presentation.Web.Tests.Integration.Controllers.Api.V1.Roles
 {
     [Collection("ControllerIntegration")]
     public class UserLoginsControllerTest : ControllerTest<UserLoginsController>, IDisposable

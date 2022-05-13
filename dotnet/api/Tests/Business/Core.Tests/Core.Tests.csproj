@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>AndcultureCode.GB.Tests.Business.Core</AssemblyName>
+    <AssemblyName>DylanJustice.Demo.Tests.Business.Core</AssemblyName>
     <IsPackable>false</IsPackable>
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Testing\Testing.csproj"/>
     <ProjectReference Include="..\..\..\Business\Core\Core.csproj"/>
-    <ProjectReference Include="..\..\..\Infrastructure\Data.SqlServer\Data.SqlServer.csproj"/>
+    <ProjectReference Include="..\..\..\Infrastructure\Data.PostgreSQL\Data.PostgreSql.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <Content Include=".\xunit.runner.json">

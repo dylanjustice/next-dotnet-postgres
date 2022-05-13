@@ -1,6 +1,6 @@
-using AndcultureCode.GB.Business.Core.Constants;
+using DylanJustice.Demo.Business.Core.Constants;
 
-namespace AndcultureCode.GB.Presentation.Web.Constants
+namespace DylanJustice.Demo.Presentation.Web.Constants
 {
     public static class Api
     {

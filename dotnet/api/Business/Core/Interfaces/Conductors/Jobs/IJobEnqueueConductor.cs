@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core.Interfaces;
-using AndcultureCode.GB.Business.Core.Interfaces.Workers;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Workers;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 
-namespace AndcultureCode.GB.Business.Core.Interfaces.Conductors.Jobs
+namespace DylanJustice.Demo.Business.Core.Interfaces.Conductors.Jobs
 {
     public interface IJobEnqueueConductor
     {

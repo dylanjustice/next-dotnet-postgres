@@ -1,6 +1,6 @@
 using System;
 
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos
 {
     public class CreatableDto : EntityDto
     {

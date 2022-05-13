@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using System.Linq;
 using AndcultureCode.CSharp.Core.Utilities.Localization;
 
-namespace AndcultureCode.GB.Presentation.Web.Middleware.Localization
+namespace DylanJustice.Demo.Presentation.Web.Middleware.Localization
 {
     public class JsonStringLocalizer : IStringLocalizer
     {

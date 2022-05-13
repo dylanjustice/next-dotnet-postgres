@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 // and add the issue URL in a comment for later abstraction.
 // -------------------------------------------------------------------------------------------------
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Api.V1
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Api.V1
 {
     /// <summary>
     /// Application API controller for sharing logic between controllers

@@ -1,8 +1,8 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using AndcultureCode.GB.Presentation.Web.Filters.Authorization;
+using DylanJustice.Demo.Presentation.Web.Filters.Authorization;
 
-namespace AndcultureCode.GB.Presentation.Web.Attributes
+namespace DylanJustice.Demo.Presentation.Web.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class BasicAuthAttribute : TypeFilterAttribute

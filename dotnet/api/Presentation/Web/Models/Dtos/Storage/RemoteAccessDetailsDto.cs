@@ -1,4 +1,4 @@
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos.Roles
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos.Roles
 {
     public class RemoteAccessDetailsDto
     {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace AndcultureCode.GB.Presentation.Web.Results
+namespace DylanJustice.Demo.Presentation.Web.Results
 {
     public class ForbidObjectResult : ObjectResult
     {

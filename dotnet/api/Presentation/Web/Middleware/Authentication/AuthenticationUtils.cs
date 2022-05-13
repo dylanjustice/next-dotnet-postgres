@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using AndcultureCode.CSharp.Extensions;
 using Microsoft.AspNetCore.Authentication;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
 using AndcultureCode.CSharp.Core.Constants;
 
-namespace AndcultureCode.GB.Presentation.Web.Middleware.Authentication
+namespace DylanJustice.Demo.Presentation.Web.Middleware.Authentication
 {
     public static class AuthenticationUtils
     {

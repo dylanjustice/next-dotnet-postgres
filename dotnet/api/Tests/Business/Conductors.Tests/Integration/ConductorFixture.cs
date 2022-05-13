@@ -1,9 +1,9 @@
 using System;
-using AndcultureCode.GB.Tests.Testing.Constants;
-using AndcultureCode.GB.Tests.Testing.Fixtures;
+using DylanJustice.Demo.Tests.Testing.Constants;
+using DylanJustice.Demo.Tests.Testing.Fixtures;
 using Xunit;
 
-namespace AndcultureCode.GB.Business.Conductors.Tests.Integration
+namespace DylanJustice.Demo.Business.Conductors.Tests.Integration
 {
     /// <summary>
     /// Purely so XUnit can dependency inject me for testing this assembly

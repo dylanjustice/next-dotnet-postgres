@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AndcultureCode.CSharp.Core.Interfaces.Entity;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer;
-using AndcultureCode.GB.Testing.Tests;
-using AndcultureCode.GB.Tests.Testing.Fixtures;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
+using DylanJustice.Demo.Testing.Tests;
+using DylanJustice.Demo.Tests.Testing.Fixtures;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Tests.Business.Core.Tests.Integration
+namespace DylanJustice.Demo.Tests.Business.Core.Tests.Integration
 {
     public class CoreIntegrationTest : ApiIntegrationTest, IDisposable
     {

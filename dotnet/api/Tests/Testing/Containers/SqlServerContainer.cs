@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Docker.DotNet.Models;
 
-namespace AndcultureCode.GB.Tests.Testing.Containers
+namespace DylanJustice.Demo.Tests.Testing.Containers
 {
     public class SqlServerContainer : DockerContainerBase
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AndcultureCode.GB.Presentation.Web.Extensions
+namespace DylanJustice.Demo.Presentation.Web.Extensions
 {
     public static class AuthorizationFilterContextExtensions
     {

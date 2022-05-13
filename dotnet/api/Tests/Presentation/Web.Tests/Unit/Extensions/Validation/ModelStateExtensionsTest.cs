@@ -4,9 +4,9 @@ using System;
 using Xunit;
 using Xunit.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using AndcultureCode.GB.Presentation.Web.Extensions.Validation;
+using DylanJustice.Demo.Presentation.Web.Extensions.Validation;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Unit.Extensions.Validation
+namespace DylanJustice.Demo.Presentation.Web.Tests.Unit.Extensions.Validation
 {
     public class ModelStateExtensionsTest : BaseUnitTest, IDisposable
     {

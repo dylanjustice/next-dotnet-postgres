@@ -1,4 +1,4 @@
-namespace AndcultureCode.GB.Business.Core.Models.Configuration
+namespace DylanJustice.Demo.Business.Core.Models.Configuration
 {
     public class HangfireWorkerConfiguration
     {

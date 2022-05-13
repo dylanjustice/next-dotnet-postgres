@@ -4,16 +4,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using AndcultureCode.CSharp.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
 using Testing.Extensions;
 using Respawn;
 using AndcultureCode.CSharp.Core.Utilities.Configuration;
 using AndcultureCode.CSharp.Core.Constants;
 using Docker.DotNet;
-using AndcultureCode.GB.Tests.Testing.Containers;
+using DylanJustice.Demo.Tests.Testing.Containers;
 using System.Runtime.InteropServices;
 
-namespace AndcultureCode.GB.Tests.Testing.Fixtures
+namespace DylanJustice.Demo.Tests.Testing.Fixtures
 {
     public abstract class DatabaseFixture : IDisposable
     {

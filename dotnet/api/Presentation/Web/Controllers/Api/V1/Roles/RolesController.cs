@@ -3,14 +3,14 @@ using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AndcultureCode.GB.Business.Core.Models.Entities.Roles;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Roles;
-using AndcultureCode.GB.Presentation.Web.Attributes;
+using DylanJustice.Demo.Business.Core.Models.Entities.Roles;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Roles;
+using DylanJustice.Demo.Presentation.Web.Attributes;
 using Microsoft.Extensions.Localization;
 using AndcultureCode.CSharp.Web.Interfaces;
 using AndcultureCode.CSharp.Web.Extensions;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.Roles
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.Roles
 {
     [FormatFilter]
     [ApiRoute("roles")]

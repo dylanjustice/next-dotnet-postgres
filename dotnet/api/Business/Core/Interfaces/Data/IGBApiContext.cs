@@ -1,10 +1,10 @@
 using System.Linq;
-using AndcultureCode.GB.Business.Core.Models.Entities.Roles;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Models.Entities.Roles;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 using AndcultureCode.CSharp.Core.Interfaces.Data;
 
-namespace AndcultureCode.GB.Business.Core.Interfaces.Data
+namespace DylanJustice.Demo.Business.Core.Interfaces.Data
 {
     public interface IGBApiContext : IApplicationContext
     {

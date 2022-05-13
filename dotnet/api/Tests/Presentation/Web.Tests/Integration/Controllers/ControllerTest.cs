@@ -18,16 +18,15 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using AndcultureCode.GB.Business.Conductors.Extensions.Startup;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer.Extensions;
-using AndcultureCode.GB.Presentation.Web.Controllers.Api.V1;
-using AndcultureCode.GB.Presentation.Web.Extensions.Startup;
-using AndcultureCode.GB.Presentation.Web.Models;
-using AndcultureCode.GB.Presentation.Worker.Extensions;
-using AndcultureCode.GB.Testing.Tests;
-using AndcultureCode.GB.Tests.Testing.Fixtures;
+using DylanJustice.Demo.Business.Conductors.Extensions.Startup;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql.Extensions;
+using DylanJustice.Demo.Presentation.Web.Controllers.Api.V1;
+using DylanJustice.Demo.Presentation.Web.Extensions.Startup;
+using DylanJustice.Demo.Presentation.Web.Models;
+using DylanJustice.Demo.Testing.Tests;
+using DylanJustice.Demo.Tests.Testing.Fixtures;
 using Xunit.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Hosting;
@@ -38,8 +37,9 @@ using AndcultureCode.CSharp.Core.Utilities.Configuration;
 using AndcultureCode.CSharp.Core.Interfaces.Providers.Worker;
 using AndcultureCode.CSharp.Web.Extensions;
 using System.Data.SqlClient;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql.Extensions.Startup;
 
-namespace AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers
+namespace DylanJustice.Demo.Tests.Presentation.Web.Tests.Integration.Controllers
 {
     /// <summary>
     /// Arrange Phase
@@ -507,11 +507,10 @@ namespace AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers
                 .AddAutoMapper(typeof(MappingProfile))
                 .AddConfiguration(Configuration, "does-not-matter-for-tests", EnvironmentName)
                 .AddContexts(Configuration, EnvironmentName)
-                .AddSqlServer()
+                .AddPostgres(Configuration)
                 .AddClients(Configuration)
                 .AddConductors(Configuration)
                 .AddAndcultureCodeLocalization()
-                .AddWorkers()
                 .AddClients(Configuration)
                 .AddProviders();
 
@@ -522,7 +521,6 @@ namespace AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers
             //.AddDistributedRedisCache(configuration); Note: We don't want to configure distribute redis cache until we absolutely need to
 
             ConfigureHttpContextAccessor(services);
-            ConfigureMockedBackgroundWorkerProvider(services);
             ConfigureMockLinkGenerator(services);
 
             watch.Stop();
@@ -567,25 +565,6 @@ namespace AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers
                 .SetupGet(m => m.HttpContext.Connection.RemoteIpAddress).Returns(IPAddress.Parse("127.0.0.1"));
 
             _registerDep(services, httpContextAccessorMock);
-
-            return services;
-        }
-
-        /// <summary>
-        /// We don't want to interact with SQL Server for the majority of integration tests. By default we will mock and return success objects.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        private IServiceCollection ConfigureMockedBackgroundWorkerProvider(IServiceCollection services)
-        {
-            var mockWorkerProvider = new Mock<IWorkerProvider>();
-
-            mockWorkerProvider.Setup(e => e.Delete(It.IsAny<string>())).Returns(true);
-            mockWorkerProvider.Setup(e => e.DeletedCount()).Returns(0);
-            mockWorkerProvider.Setup(e => e.Enqueue(It.IsAny<Expression<Action>>())).Returns(Guid.NewGuid().ToString());
-            mockWorkerProvider.Setup(e => e.Implemented).Returns(true);
-
-            services.AddScoped<IWorkerProvider>((sp) => mockWorkerProvider.Object);
 
             return services;
         }

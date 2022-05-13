@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos.Errors
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos.Errors
 {
     public class ErrorDto
     {

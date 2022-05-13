@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using AndcultureCode.CSharp.Core.Providers.Configuration;
 
-namespace AndcultureCode.GB.Presentation.Web
+namespace DylanJustice.Demo.Presentation.Web
 {
     public class Program
     {

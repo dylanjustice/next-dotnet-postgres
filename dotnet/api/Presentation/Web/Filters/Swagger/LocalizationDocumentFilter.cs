@@ -3,11 +3,11 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 using AndcultureCode.CSharp.Extensions;
-using AndcultureCode.GB.Presentation.Web.Constants;
+using DylanJustice.Demo.Presentation.Web.Constants;
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core.Utilities.Localization;
 
-namespace AndcultureCode.GB.Presentation.Web.Filters.Swagger
+namespace DylanJustice.Demo.Presentation.Web.Filters.Swagger
 {
     /// <summary>
     /// Enhances Swagger API documentation for global localization related information

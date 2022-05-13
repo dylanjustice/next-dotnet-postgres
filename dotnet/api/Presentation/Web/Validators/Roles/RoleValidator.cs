@@ -1,9 +1,9 @@
 using FluentValidation;
-using AndcultureCode.GB.Business.Core.Models.Configuration;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Roles;
+using DylanJustice.Demo.Business.Core.Models.Configuration;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Roles;
 using AndcultureCode.CSharp.Core.Models.Configuration;
 
-namespace AndcultureCode.GB.Presentation.Web.Validators.Roles
+namespace DylanJustice.Demo.Presentation.Web.Validators.Roles
 {
     public class RoleValidator : AbstractValidator<RoleDto>
     {

@@ -1,18 +1,18 @@
 ﻿using AndcultureCode.CSharp.Core.Models;
 using Microsoft.Extensions.Hosting;
 using Moq;
-using AndcultureCode.GB.Business.Core.Models.Configuration;
-using AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.SystemSettings;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.SystemSettings;
-using AndcultureCode.GB.Presentation.Web.Tests.Extensions;
-using AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers;
+using DylanJustice.Demo.Business.Core.Models.Configuration;
+using DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.SystemSettings;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.SystemSettings;
+using DylanJustice.Demo.Tests.Presentation.Web.Tests.Integration.Controllers;
 using Shouldly;
 using System;
 using Xunit;
 using Xunit.Abstractions;
-using AndcultureCode.GB.Testing.Constants;
+using DylanJustice.Demo.Testing.Constants;
+using AndcultureCode.GB.Presentation.Web.Tests.Extensions;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Integration.Controllers.Api.V1.SystemSettings
+namespace DylanJustice.Demo.Presentation.Web.Tests.Integration.Controllers.Api.V1.SystemSettings
 {
     [Collection("ControllerIntegration")]
     public class SystemSettingsControllerTest : ControllerTest<SystemSettingsController>, IDisposable

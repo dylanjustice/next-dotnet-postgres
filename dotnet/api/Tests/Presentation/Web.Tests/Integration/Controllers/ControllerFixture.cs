@@ -1,9 +1,9 @@
 using System;
-using AndcultureCode.GB.Tests.Testing.Constants;
-using AndcultureCode.GB.Tests.Testing.Fixtures;
+using DylanJustice.Demo.Tests.Testing.Constants;
+using DylanJustice.Demo.Tests.Testing.Fixtures;
 using Xunit;
 
-namespace AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers
+namespace DylanJustice.Demo.Tests.Presentation.Web.Tests.Integration.Controllers
 {
     public class ControllerFixture : DatabaseFixture, IDisposable
     {

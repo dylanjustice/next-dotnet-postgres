@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.TestHelper;
 using Newtonsoft.Json;
-using AndcultureCode.GB.Presentation.Web.Validators.Jobs;
-using AndcultureCode.GB.Testing.Tests;
+using DylanJustice.Demo.Presentation.Web.Validators.Jobs;
+using DylanJustice.Demo.Testing.Tests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Unit.Validators.Jobs
+namespace DylanJustice.Demo.Presentation.Web.Tests.Unit.Validators.Jobs
 {
     public class JobValidatorTest : ApiUnitTest, IDisposable
     {

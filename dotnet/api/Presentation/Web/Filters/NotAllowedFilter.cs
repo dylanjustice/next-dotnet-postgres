@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace AndcultureCode.GB.Presentation.Web.Filters
+namespace DylanJustice.Demo.Presentation.Web.Filters
 {
     public class NotAllowedFilter : ActionFilterAttribute
     {

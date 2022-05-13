@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core.Enumerations;
 
-namespace AndcultureCode.GB.Presentation.Web.Models.Dtos.Jobs
+namespace DylanJustice.Demo.Presentation.Web.Models.Dtos.Jobs
 {
     public class JobDto : AuditableDto
     {

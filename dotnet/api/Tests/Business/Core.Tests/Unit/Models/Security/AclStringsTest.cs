@@ -1,11 +1,11 @@
 using System;
-using AndcultureCode.GB.Business.Core.Models.Security;
-using AndcultureCode.GB.Testing.Tests;
+using DylanJustice.Demo.Business.Core.Models.Security;
+using DylanJustice.Demo.Testing.Tests;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AndcultureCode.GB.Business.Core.Tests.Unit.Models.Security
+namespace DylanJustice.Demo.Business.Core.Tests.Unit.Models.Security
 {
     public class AclStringsTest : ApiUnitTest, IDisposable
     {

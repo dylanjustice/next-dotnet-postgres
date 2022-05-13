@@ -1,14 +1,14 @@
 using AndcultureCode.CSharp.Conductors;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 using Microsoft.Extensions.DependencyInjection;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Jobs;
-using AndcultureCode.GB.Business.Conductors.Domain.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Jobs;
+using DylanJustice.Demo.Business.Conductors.Domain.Jobs;
 using Microsoft.Extensions.Configuration;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Domain.Users;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
-using AndcultureCode.GB.Business.Conductors.Domain.UserLogins;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Conductors.Domain.UserLogins;
 
-namespace AndcultureCode.GB.Business.Conductors.Extensions.Startup
+namespace DylanJustice.Demo.Business.Conductors.Extensions.Startup
 {
     public static class IServiceCollectionExtensions
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core.Interfaces.Entity;
 using AndcultureCode.CSharp.Core.Models;
-using AndcultureCode.GB.Business.Core.Models.Entities.Users;
+using DylanJustice.Demo.Business.Core.Models.Entities.Users;
 
-namespace AndcultureCode.GB.Business.Core.Models.Entities.Roles
+namespace DylanJustice.Demo.Business.Core.Models.Entities.Roles
 {
     public class Role : Auditable, IRole
     {

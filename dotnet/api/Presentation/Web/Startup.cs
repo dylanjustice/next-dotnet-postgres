@@ -10,25 +10,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using AndcultureCode.GB.Business.Core.Extensions.Startup;
-using AndcultureCode.GB.Infrastructure.Workers.Hangfire.Extensions;
-using AndcultureCode.GB.Presentation.Web.Extensions.Startup;
-using AndcultureCode.GB.Presentation.Web.Filters.Validation;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos;
+using DylanJustice.Demo.Business.Core.Extensions.Startup;
+using DylanJustice.Demo.Presentation.Web.Extensions.Startup;
+using DylanJustice.Demo.Presentation.Web.Filters.Validation;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos;
 using System;
 using System.IO;
 using System.Reflection;
-using AndcultureCode.GB.Presentation.Web.Filters.Swagger;
-using AndcultureCode.GB.Presentation.Web.Constants;
+using DylanJustice.Demo.Presentation.Web.Filters.Swagger;
+using DylanJustice.Demo.Presentation.Web.Constants;
 using Microsoft.OpenApi.Models;
 using AndcultureCode.CSharp.Web.Extensions;
 using AndcultureCode.CSharp.Extensions;
 using AndcultureCode.CSharp.Core.Utilities.Configuration;
-using AndcultureCode.CSharp.Core.Interfaces.Providers.Worker;
 using AndcultureCode.CSharp.Data.Extensions;
-using AndcultureCode.GB.Infrastructure.Data.SqlServer.Seeds;
+using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
 
-namespace AndcultureCode.GB.Presentation.Web
+namespace DylanJustice.Demo.Presentation.Web
 {
     public class Startup
     {
@@ -96,7 +94,6 @@ namespace AndcultureCode.GB.Presentation.Web
             services.AddHealthChecks();
             services.AddAndcultureCodeLocalization();
             services.AddApi(_configuration, _environment);
-            services.AddBackgroundWorkers(_configuration);
             services
                 .AddCookieAuthentication(_configuration)
                 .AddGoogleOAuth(_configuration)
@@ -104,7 +101,6 @@ namespace AndcultureCode.GB.Presentation.Web
             services.AddForwardedHeaders();
             services.AddApplicationInsightsTelemetry(); // Must be registered before Serilog provider
             services.AddSerilogServices(_configuration, _environment);
-            services.AddBackgroundWorkerServer(_configuration);
 
             // Caching
             services.AddMemoryCache();
@@ -132,7 +128,6 @@ namespace AndcultureCode.GB.Presentation.Web
         public void Configure(
             IApplicationBuilder app,
             IHostEnvironment env,
-            IWorkerProvider workerProvider,
             IOptions<RequestLocalizationOptions> requestOptions
         )
         {
@@ -149,12 +144,11 @@ namespace AndcultureCode.GB.Presentation.Web
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var serviceProvider = serviceScope.ServiceProvider;
-                var seeds = new Seeds(serviceProvider, env.IsDevelopment());
 
-                app.ConfigureDatabase(
+                app.ConfigureDatabase<GBApiContext>(
                     serviceProvider,
                     migrate: true,
-                    seeds
+                    seeds: null
                 );
             }
 
@@ -170,7 +164,6 @@ namespace AndcultureCode.GB.Presentation.Web
                 app.UseHsts();
             }
 
-            app.UseHangfireDashboard(_configuration);
             app.UseGlobalExceptionHandler();
             app.UseHttpsRedirection();
 
@@ -226,28 +219,8 @@ namespace AndcultureCode.GB.Presentation.Web
                     spa.UseProxyToSpaDevelopmentServer(FRONTEND_DEVELOPMENT_SERVER_URL);
                 }
             });
-
-            // Register Background Jobs
-            // ConfigureBackgroundJobs(app, env, workerProvider);
         }
 
-        public virtual void ConfigureBackgroundJobs(
-            IApplicationBuilder app,
-            IHostEnvironment env,
-            IWorkerProvider workerProvider
-        )
-        {
-            if (env.IsEnvironment("Testing"))
-            {
-                return;
-            }
-
-            Console.WriteLine("[IWorkerProviderExtensions.RegisterBackgroundJobs] Starting Registering Background Jobs");
-
-            // workerProvider.RegisterSomeJob();
-
-            Console.WriteLine("[IWorkerProviderExtensions.RegisterBackgroundJobs] Completed Registering Background Jobs");
-        }
 
         #endregion Public Methods
     }

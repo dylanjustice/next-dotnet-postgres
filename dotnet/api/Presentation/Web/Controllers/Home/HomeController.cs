@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using AndcultureCode.GB.Presentation.Web.Attributes;
+using DylanJustice.Demo.Presentation.Web.Attributes;
 using AndcultureCode.CSharp.Core.Constants;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Home
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Home
 {
     public class HomeController : AndcultureCode.CSharp.Web.Controllers.Controller
     {

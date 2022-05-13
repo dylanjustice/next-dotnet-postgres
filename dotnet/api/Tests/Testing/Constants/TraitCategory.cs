@@ -1,4 +1,4 @@
-namespace AndcultureCode.GB.Testing.Constants
+namespace DylanJustice.Demo.Testing.Constants
 {
     /// <summary>
     /// Testing categories

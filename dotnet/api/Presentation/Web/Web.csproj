@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <AssemblyFileVersion>0.0.2</AssemblyFileVersion>
-    <AssemblyName>AndcultureCode.GB.Presentation.Web</AssemblyName>
+    <AssemblyName>DylanJustice.Demo.Presentation.Web</AssemblyName>
     <AssemblyVersion>0.0.2</AssemblyVersion>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <PackageVersion>0.0.2</PackageVersion>
@@ -41,9 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Business\Conductors\Conductors.csproj" />
     <ProjectReference Include="..\..\Business\Core\Core.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Data.SqlServer\Data.SqlServer.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Workers.Hangfire\Workers.Hangfire.csproj" />
-    <ProjectReference Include="..\Worker\Worker.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Data.PostgreSQL\Data.PostgreSql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.Development.json">

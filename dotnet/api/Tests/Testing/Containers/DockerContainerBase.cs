@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AndcultureCode.GB.Tests.Testing.Enumerations;
+using DylanJustice.Demo.Tests.Testing.Enumerations;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 
-namespace AndcultureCode.GB.Tests.Testing.Containers
+namespace DylanJustice.Demo.Tests.Testing.Containers
 {
     public abstract class DockerContainerBase
     {

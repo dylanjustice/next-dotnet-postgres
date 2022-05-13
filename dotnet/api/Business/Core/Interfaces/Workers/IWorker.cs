@@ -1,8 +1,8 @@
 using AndcultureCode.CSharp.Core.Interfaces;
 using Hangfire;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 
-namespace AndcultureCode.GB.Business.Core.Interfaces.Workers
+namespace DylanJustice.Demo.Business.Core.Interfaces.Workers
 {
     public interface IWorker
     {

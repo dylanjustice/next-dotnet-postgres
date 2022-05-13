@@ -1,8 +1,8 @@
 using AndcultureCode.CSharp.Testing.Factories;
 using Bogus;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
 
-namespace AndcultureCode.GB.Testing.Factories.Models.Entities.Jobs
+namespace DylanJustice.Demo.Testing.Factories.Models.Entities.Jobs
 {
     public class JobFactory : Factory
     {

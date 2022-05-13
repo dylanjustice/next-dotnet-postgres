@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace AndcultureCode.GB.Business.Core.Models.Security
+namespace DylanJustice.Demo.Business.Core.Models.Security
 {
     public class AclStrings
     {

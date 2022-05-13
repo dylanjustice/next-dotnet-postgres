@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors.Jobs;
-using AndcultureCode.GB.Business.Core.Interfaces.Workers;
-using AndcultureCode.GB.Business.Core.Models.Jobs;
-using AndcultureCode.GB.Business.Core.Models.Security;
-using AndcultureCode.GB.Presentation.Web.Attributes;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Jobs;
+using DylanJustice.Demo.Business.Core.Interfaces.Workers;
+using DylanJustice.Demo.Business.Core.Models.Jobs;
+using DylanJustice.Demo.Business.Core.Models.Security;
+using DylanJustice.Demo.Presentation.Web.Attributes;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Jobs;
 
-namespace AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.Jobs
+namespace DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.Jobs
 {
     [FormatFilter]
     [ApiRoute("jobs")]

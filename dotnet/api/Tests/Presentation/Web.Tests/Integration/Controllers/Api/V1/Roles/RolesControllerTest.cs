@@ -1,11 +1,10 @@
 using Shouldly;
 using System;
 using System.Collections.Generic;
-using AndcultureCode.GB.Business.Core.Models.Entities.Roles;
-using AndcultureCode.GB.Presentation.Web.Controllers.Api.V1.Roles;
-using AndcultureCode.GB.Presentation.Web.Models.Dtos.Roles;
-using AndcultureCode.GB.Presentation.Web.Tests.Extensions;
-using AndcultureCode.GB.Tests.Presentation.Web.Tests.Integration.Controllers;
+using DylanJustice.Demo.Business.Core.Models.Entities.Roles;
+using DylanJustice.Demo.Presentation.Web.Controllers.Api.V1.Roles;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Roles;
+using DylanJustice.Demo.Tests.Presentation.Web.Tests.Integration.Controllers;
 using Xunit;
 using Xunit.Abstractions;
 using AndcultureCode.CSharp.Core.Models;
@@ -13,9 +12,10 @@ using AndcultureCode.CSharp.Testing.Extensions;
 using Moq;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 using AndcultureCode.CSharp.Testing.Extensions.Mocks.Conductors;
-using AndcultureCode.GB.Testing.Constants;
+using DylanJustice.Demo.Testing.Constants;
+using AndcultureCode.GB.Presentation.Web.Tests.Extensions;
 
-namespace AndcultureCode.GB.Presentation.Web.Tests.Integration.Controllers.Api.V1.Roles
+namespace DylanJustice.Demo.Presentation.Web.Tests.Integration.Controllers.Api.V1.Roles
 {
     [Collection("ControllerIntegration")]
     public class RolesControllerTest : ControllerTest<RolesController>, IDisposable

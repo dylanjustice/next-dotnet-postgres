@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using AndcultureCode.GB.Business.Core.Interfaces.Conductors;
-using AndcultureCode.GB.Presentation.Web.Attributes;
-using AndcultureCode.GB.Presentation.Web.Requirements;
-using AndcultureCode.GB.Business.Core.Extensions;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors;
+using DylanJustice.Demo.Presentation.Web.Attributes;
+using DylanJustice.Demo.Presentation.Web.Requirements;
+using DylanJustice.Demo.Business.Core.Extensions;
 using AndcultureCode.CSharp.Extensions;
 using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces.Conductors;
 
-namespace AndcultureCode.GB.Presentation.Web.Filters.Authorization
+namespace DylanJustice.Demo.Presentation.Web.Filters.Authorization
 {
     public class AclAuthorizationFilter : IAuthorizationFilter
     {
