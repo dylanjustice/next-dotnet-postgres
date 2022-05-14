@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AndcultureCode.CSharp.Web" Version="0.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Data.Mockaroo\Data.Mockaroo.csproj" />
     <ProjectReference Include="..\..\Business\Core\Core.csproj" />
+    <ProjectReference Include="..\..\Business\Conductors\Conductors.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using Mockaroo.Business.Core.Models.Users;
 
 namespace Mockaroo.Business.Core.Interfaces
 {
-    public interface IMockarooProvider : IProvider
+    public interface IUsersProvider : IProvider
     {
         Task<List<User>> ListUsers();
     }
