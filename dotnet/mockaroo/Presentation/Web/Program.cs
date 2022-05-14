@@ -11,9 +11,9 @@ var configurationBuilder = builder.Configuration
         .AddEnvironmentVariables();
 
 var config = configurationBuilder.Build();
-
 builder.Services.AddConductors(config);
 builder.Services.AddMockaroo(config);
+builder.Services.AddAutoMapper(typeof(Mockaroo.Infrastructure.Data.Mockaroo.Maps.MappingProfile));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

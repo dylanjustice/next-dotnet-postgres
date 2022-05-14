@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="AndcultureCode.CSharp.Web" Version="0.3.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Automapper" Version="11.0.1" />
   </ItemGroup>
 
   <ItemGroup>
