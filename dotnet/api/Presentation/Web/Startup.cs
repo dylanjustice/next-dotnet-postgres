@@ -26,6 +26,7 @@ using AndcultureCode.CSharp.Core.Utilities.Configuration;
 using AndcultureCode.CSharp.Data.Extensions;
 using DylanJustice.Demo.Infrastructure.Data.PostgreSql;
 using Microsoft.EntityFrameworkCore;
+using DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Extensions;
 
 namespace DylanJustice.Demo.Presentation.Web
 {
@@ -94,6 +95,7 @@ namespace DylanJustice.Demo.Presentation.Web
 
             services.AddHealthChecks();
             services.AddAndcultureCodeLocalization();
+            services.AddEmployeeService(_configuration);
             services.AddApi(_configuration, _environment);
             services
                 .AddCookieAuthentication(_configuration)

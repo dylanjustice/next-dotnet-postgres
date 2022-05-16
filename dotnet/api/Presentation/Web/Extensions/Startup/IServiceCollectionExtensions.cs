@@ -35,7 +35,7 @@ namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
         public static IServiceCollection AddApi(this IServiceCollection services, IConfigurationRoot configuration, IHostEnvironment environment)
         {
             services
-                .AddAutoMapper(typeof(MappingProfile))
+                .AddAutoMapper(typeof(MappingProfile), typeof(DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Maps.MappingProfile))
                 .AddConfiguration(
                         configuration,
                         environment.ContentRootPath,

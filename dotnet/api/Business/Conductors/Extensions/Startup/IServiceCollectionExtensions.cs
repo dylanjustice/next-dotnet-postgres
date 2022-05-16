@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Users;
 using DylanJustice.Demo.Business.Core.Models.Entities.Users;
 using DylanJustice.Demo.Business.Conductors.Domain.UserLogins;
+using DylanJustice.Demo.Business.Conductors.Domain.Employees;
+using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Employees;
 
 namespace DylanJustice.Demo.Business.Conductors.Extensions.Startup
 {
@@ -18,6 +20,7 @@ namespace DylanJustice.Demo.Business.Conductors.Extensions.Startup
             services.AddScoped<IJobEnqueueConductor, JobEnqueueConductor>();
 
             // Users
+            services.AddScoped<IEmployeeRepositoryConductor, EmployeeRepositoryConductor>();
             services.AddScoped<IUserLoginConductor<User>, UserLoginConductor<User>>();
 
             // Repository defaults - Should appear last

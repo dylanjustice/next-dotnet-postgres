@@ -6,6 +6,8 @@ using DylanJustice.Demo.Presentation.Web.Models.Dtos.Jobs;
 using DylanJustice.Demo.Presentation.Web.Models.Dtos.Roles;
 using DylanJustice.Demo.Presentation.Web.Models.Dtos.Users;
 using DylanJustice.Demo.Business.Core.Models.Storage;
+using DylanJustice.Demo.Presentation.Web.Models.Dtos.Employees;
+using DylanJustice.Demo.Business.Core.Models.Dto;
 
 namespace DylanJustice.Demo.Presentation.Web.Models
 {
@@ -13,6 +15,7 @@ namespace DylanJustice.Demo.Presentation.Web.Models
     {
         public MappingProfile()
         {
+            CreateMap<Employee, EmployeeDto>();
             // Jobs
             CreateMap<Job, JobDto>();
 

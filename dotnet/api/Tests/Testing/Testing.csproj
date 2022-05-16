@@ -9,7 +9,7 @@
     <PackageReference Include="AndcultureCode.CSharp.Core" Version="0.5.10"/>
     <PackageReference Include="AndcultureCode.CSharp.Testing" Version="0.3.0"/>
     <PackageReference Include="Docker.Dotnet" Version="3.125.5"/>
-    <PackageReference Include="AutoMapper" Version="9.0.0"/>
+    <PackageReference Include="AutoMapper" Version="11.0.1"/>
     <PackageReference Include="Bogus" Version="28.2.1"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0"/>
     <PackageReference Include="Moq" Version="4.13.0"/>
