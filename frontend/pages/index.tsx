@@ -1,7 +1,8 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import EmployeeList from "../components/employee-list";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   return (
@@ -13,9 +14,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Dapr Demo!
-        </h1>
+        <h1 className={styles.title}>Dapr Demo!</h1>
+        <EmployeeList />
       </main>
 
       <footer className={styles.footer}>
@@ -24,14 +24,14 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

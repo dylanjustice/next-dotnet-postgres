@@ -55,7 +55,7 @@ namespace DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Providers
                 }
 
 
-                return new Result<IEnumerable<Employee>>(_mapper.Map<List<Employee>>(employeeGetResult));
+                return new Result<IEnumerable<Employee>>(_mapper.Map<List<Employee>>(employeeGetResult.ResultObject));
             }
             catch (System.Exception ex)
             {
