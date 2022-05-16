@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AndcultureCode.CSharp.Core.Extensions;
+using AndcultureCode.CSharp.Core.Interfaces;
+using AndcultureCode.CSharp.Core.Models;
 using AutoMapper;
 using DylanJustice.Demo.Api.Business.Core.Interfaces.Providers;
 using DylanJustice.Demo.Business.Core.Models.Dto;
@@ -14,6 +17,7 @@ namespace DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Providers
     public class EmployeeProvider : IEmployeeProvider
     {
         public const string ERR_GET_USERS_FAILED = "DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Providers.Employee.List.Unsuccessful";
+        public const string ERR_UNHANDLED_EXCEPTION = "DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Providers.Employee.List.Exception";
         private readonly HttpClient _client;
         private readonly ILogger<EmployeeProvider> _logger;
         private readonly IMapper _mapper;
@@ -33,24 +37,30 @@ namespace DylanJustice.Demo.Infrastructure.Data.ExternalUsers.Providers
 
         #region IExternalUserProvider Implementation
 
-        public async Task<IEnumerable<Employee>> FindAll()
+        public async Task<IResult<IEnumerable<Employee>>> FindAll()
         {
             try
             {
-                var listResponseMessage = await _client.GetAsync("/users");
+                var listResponseMessage = await _client.GetAsync("/api/v1/users");
                 if (!listResponseMessage.IsSuccessStatusCode)
                 {
                     _logger.LogError($"Key: {ERR_GET_USERS_FAILED}, Message: Error occurred getting users. Response does not indicate success. ({listResponseMessage.StatusCode})");
+                    return new Result<IEnumerable<Employee>>(ERR_GET_USERS_FAILED, $"Error occurred getting users. Response does not indicate success. ({listResponseMessage.StatusCode})");
                 }
                 var content = await listResponseMessage.Content.ReadAsStringAsync();
-                var employees = JsonConvert.DeserializeObject<List<ExternalEmployeeDto>>(content);
+                var employeeGetResult = JsonConvert.DeserializeObject<Result<List<ExternalEmployeeDto>>>(content);
+                if (employeeGetResult.HasErrors)
+                {
+                    return new Result<IEnumerable<Employee>>(ERR_GET_USERS_FAILED, employeeGetResult.ListErrors());
+                }
 
-                return _mapper.Map<List<Employee>>(employees);
+
+                return new Result<IEnumerable<Employee>>(_mapper.Map<List<Employee>>(employeeGetResult));
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return new List<Employee>();
+                return new Result<IEnumerable<Employee>>(ERR_GET_USERS_FAILED, ex.Message);
             }
         }
 

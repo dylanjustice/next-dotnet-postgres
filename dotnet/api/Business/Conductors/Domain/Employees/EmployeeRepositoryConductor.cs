@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AndcultureCode.CSharp.Core;
+using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces;
 using DylanJustice.Demo.Api.Business.Core.Interfaces.Providers;
 using DylanJustice.Demo.Business.Core.Interfaces.Conductors.Domain.Employees;
@@ -34,9 +35,13 @@ namespace DylanJustice.Demo.Business.Conductors.Domain.Employees
 
         public IResult<IEnumerable<Employee>> FindAll() => Do<IEnumerable<Employee>>.Try((r) =>
         {
-            var employees = _employeeProvider.FindAll().Result;
+            var employeesResult = _employeeProvider.FindAll().Result;
+            if (employeesResult.HasErrors)
+            {
+                r.AddErrors(employeesResult.Errors);
+            }
 
-            return employees;
+            return employeesResult.ResultObject;
         }).Result;
 
         #endregion IEmployeeRepositoryConductor
