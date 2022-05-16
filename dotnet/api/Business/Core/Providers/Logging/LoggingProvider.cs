@@ -7,6 +7,7 @@ using Serilog.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
+using Serilog.Sinks.AwsCloudWatch;
 
 namespace DylanJustice.Demo.Business.Core.Providers.Logging
 {
@@ -17,6 +18,7 @@ namespace DylanJustice.Demo.Business.Core.Providers.Logging
 
         private const string APP_NAME = "GravityBootsApi";
         private const string OUTPUT_TEMPLATE = "{MachineName} {Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{Application}] [{SourceContext}] {Message:lj}{NewLine}{Exception}{NewLine}";
+        private const string CLOUDWATCH_LOG_GROUP = "dylanjustice-demo/api";
 
         #endregion Constants
 
@@ -52,16 +54,11 @@ namespace DylanJustice.Demo.Business.Core.Providers.Logging
                      .CreateLogger();
             }
 
-            var serviceProvider = _services.BuildServiceProvider();
-
             return new LoggerConfiguration()
                 .WriteTo.Console(
                          restrictedToMinimumLevel: LogEventLevel.Debug,
                          outputTemplate: OUTPUT_TEMPLATE,
                          theme: SystemConsoleTheme.Colored)
-                .WriteTo.ApplicationInsights(
-                    telemetryConfiguration: serviceProvider.GetRequiredService<TelemetryConfiguration>(),
-                    telemetryConverter: TelemetryConverter.Traces)
                 .Enrich.WithMachineName()
                 .Enrich.WithProperty("Application", APP_NAME)
                 .CreateLogger();
