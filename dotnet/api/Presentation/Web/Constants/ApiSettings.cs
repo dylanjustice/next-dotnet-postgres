@@ -2,7 +2,7 @@ using DylanJustice.Demo.Business.Core.Constants;
 
 namespace DylanJustice.Demo.Presentation.Web.Constants
 {
-    public static class Api
+    public static class ApiSettings
     {
         public const string DOCUMENTATION_RELATIVE_URL = "api/docs";
 

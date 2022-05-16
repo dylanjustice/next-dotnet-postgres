@@ -51,7 +51,7 @@ namespace DylanJustice.Demo.Presentation.Web.Filters.Swagger
         {
             var operationName = operationItem.Key; // ie. get, post, etc...
             var operation = operationItem.Value;
-            var cultureParam = operation.Parameters.FirstOrDefault(e => e.Name.ToLower() == Api.ROUTING_CULTURE_CONSTRAINT);
+            var cultureParam = operation.Parameters.FirstOrDefault(e => e.Name.ToLower() == ApiSettings.ROUTING_CULTURE_CONSTRAINT);
 
             if (cultureParam == null)
             {
@@ -59,7 +59,7 @@ namespace DylanJustice.Demo.Presentation.Web.Filters.Swagger
                 operation.Parameters.Add(cultureParam);
             }
 
-            cultureParam.Name = Api.ROUTING_CULTURE_CONSTRAINT;
+            cultureParam.Name = ApiSettings.ROUTING_CULTURE_CONSTRAINT;
             cultureParam.Description = _description;
             cultureParam.Required = false;
         }
@@ -75,7 +75,7 @@ namespace DylanJustice.Demo.Presentation.Web.Filters.Swagger
         private void ApplyToController(KeyValuePair<string, OpenApiPathItem> pathItem)
         {
             var route = pathItem.Key;
-            if (!route.Contains($"{{{Api.ROUTING_CULTURE_CONSTRAINT}}}"))
+            if (!route.Contains($"{{{ApiSettings.ROUTING_CULTURE_CONSTRAINT}}}"))
             {
                 return;
             }

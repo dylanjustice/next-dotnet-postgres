@@ -110,7 +110,7 @@ namespace DylanJustice.Demo.Presentation.Web
             // Documentation Generation
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = Api.TITLE, Version = $"v{Api.VERSION}" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = ApiSettings.TITLE, Version = $"v{ApiSettings.VERSION}" });
 
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -133,7 +133,7 @@ namespace DylanJustice.Demo.Presentation.Web
         )
         {
             var version = _configuration.GetVersion(env.IsDevelopment());
-            Console.WriteLine($"{Api.TITLE} Version: {version}");
+            Console.WriteLine($"{ApiSettings.TITLE} Version: {version}");
 
             app.UseRewriter();
 
@@ -173,8 +173,8 @@ namespace DylanJustice.Demo.Presentation.Web
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{Api.TITLE} V{Api.VERSION}");
-                c.RoutePrefix = Api.DOCUMENTATION_RELATIVE_URL;
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{ApiSettings.TITLE} V{ApiSettings.VERSION}");
+                c.RoutePrefix = ApiSettings.DOCUMENTATION_RELATIVE_URL;
             });
 
             // Internationlization

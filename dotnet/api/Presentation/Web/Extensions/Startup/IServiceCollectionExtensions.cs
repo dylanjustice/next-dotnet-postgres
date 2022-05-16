@@ -155,9 +155,9 @@ namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
             options.AddRewrite(
                 regex:
                     "^(?!\\/{0,1}[a-zA-Z]{2}-[a-zA-Z]{2})" + // Do NOT '?!' rewrite, if string starts with '^' culture of format 'az-AZ'
-                    "\\/{0,1}" + Api.VERSION_PREFIX +        // Must be a versioned api branch of routing (ignore everything else - ie. SPA, static files, MVC routes)
+                    "\\/{0,1}" + ApiSettings.VERSION_PREFIX +        // Must be a versioned api branch of routing (ignore everything else - ie. SPA, static files, MVC routes)
                     "(.*)$",                                 // Capture group to preserve the unique portion of the route
-                replacement: $"{LocalizationUtils.DefaultCultureCode.ToLower()}/{Api.VERSION_PREFIX}$1",
+                replacement: $"{LocalizationUtils.DefaultCultureCode.ToLower()}/{ApiSettings.VERSION_PREFIX}$1",
                 skipRemainingRules: false
             );
         });
@@ -165,7 +165,7 @@ namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
         public static IServiceCollection ConfigureRouteOptions(this IServiceCollection services)
             => services.Configure<RouteOptions>(options =>
         {
-            options.ConstraintMap.Add(Api.ROUTING_CULTURE_CONSTRAINT, typeof(CultureRouteConstraint));
+            options.ConstraintMap.Add(ApiSettings.ROUTING_CULTURE_CONSTRAINT, typeof(CultureRouteConstraint));
         });
     }
 }

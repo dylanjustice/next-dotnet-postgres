@@ -36,7 +36,7 @@ namespace DylanJustice.Demo.Presentation.Web.Attributes
                 template = template.Substring(1);
             }
 
-            _template = $"{Api.LOCALIZED_RELATIVE_URL_TEMPLATE}{template}";
+            _template = $"{ApiSettings.LOCALIZED_RELATIVE_URL_TEMPLATE}{template}";
         }
 
         #endregion Constructors

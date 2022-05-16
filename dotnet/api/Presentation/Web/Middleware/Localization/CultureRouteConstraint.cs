@@ -9,12 +9,12 @@ namespace DylanJustice.Demo.Presentation.Web.Middleware.Localization
     {
         public bool Match(HttpContext httpContext, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (!values.ContainsKey(Api.ROUTING_CULTURE_CONSTRAINT))
+            if (!values.ContainsKey(ApiSettings.ROUTING_CULTURE_CONSTRAINT))
             {
                 return false;
             }
 
-            var cultureCode = values[Api.ROUTING_CULTURE_CONSTRAINT].ToString();
+            var cultureCode = values[ApiSettings.ROUTING_CULTURE_CONSTRAINT].ToString();
 
             return LocalizationUtils.CultureExists(cultureCode);
         }
