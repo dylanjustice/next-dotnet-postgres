@@ -9,6 +9,10 @@ locals {
   }
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 resource "aws_s3_bucket" "logs" {
   bucket = "djustice-gb-logs"
 }
@@ -28,45 +32,81 @@ resource "aws_vpc" "main" {
   cidr_block           = local.cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
+  tags = local.tags
 }
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 }
 
-resource "aws_subnet" "app_1" {
+resource "aws_subnet" "public_0" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.0.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+  tags = local.tags
+}
+resource "aws_subnet" "public_1" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = local.tags
 }
-resource "aws_subnet" "app_2" {
+resource "aws_subnet" "private_00" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-east-1b"
+  cidr_block        = "10.0.100.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+  tags = local.tags
 }
-resource "aws_subnet" "database_1" {
+resource "aws_subnet" "private_10" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-east-1c"
+  cidr_block        = "10.0.200.0/24"
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = local.tags
 }
-resource "aws_subnet" "database_2" {
+resource "aws_subnet" "private_01" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.4.0/24"
-  availability_zone = "us-east-1d"
+  cidr_block        = "10.0.101.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+  tags = local.tags
 }
-resource "aws_subnet" "elb_1" {
+resource "aws_subnet" "private_11" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.5.0/24"
-  availability_zone = "us-east-1e"
+  cidr_block        = "10.0.201.0/24"
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = local.tags
 }
-resource "aws_subnet" "elb_2" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.6.0/24"
-  availability_zone = "us-east-1f"
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw.id
+  }
+}
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+  route = []
+}
+
+resource "aws_route_table_association" "private_00" {
+  subnet_id = aws_subnet.private_00.id
+  route_table_id = aws_route_table.private.id
+}
+resource "aws_route_table_association" "private_01" {
+  subnet_id = aws_subnet.private_01.id
+  route_table_id = aws_route_table.private.id
+}
+resource "aws_route_table_association" "private_10" {
+  subnet_id = aws_subnet.private_10.id
+  route_table_id = aws_route_table.private.id
+}
+resource "aws_route_table_association" "private_11" {
+  subnet_id = aws_subnet.private_11.id
+  route_table_id = aws_route_table.private.id
 }
 
 resource "aws_security_group" "db" {
-  name        = "sg-gravityboots-db-${var.environment}"
+  name        = "secgroup-gravityboots-db-${var.environment}"
   description = "Traffic to the database"
   vpc_id      = aws_vpc.main.id
   ingress {
@@ -82,16 +122,18 @@ resource "aws_security_group" "db" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = local.tags
 }
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "main"
-  subnet_ids = [aws_subnet.database_1.id, aws_subnet.database_2.id]
+  subnet_ids = [aws_subnet.private_01.id, aws_subnet.private_11.id]
+  tags = local.tags
 }
 
 # Database
 resource "aws_db_instance" "db" {
   allocated_storage      = 10
-  availability_zone      = "us-east-1a"
+  availability_zone      = data.aws_availability_zones.available.names[0]
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   engine                 = "postgres"
   engine_version         = 14.2
@@ -103,6 +145,7 @@ resource "aws_db_instance" "db" {
   vpc_security_group_ids = [aws_security_group.db.id]
   identifier             = "db-gravitybootsapi-db-${var.environment}"
   multi_az               = var.environment == "production" ? true : false
+  tags = local.tags
 }
 
 # EC2
@@ -127,6 +170,7 @@ resource "aws_security_group" "allow_tls" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+  tags = local.tags
 }
 
 # API
@@ -166,22 +210,23 @@ resource "aws_ecs_cluster_capacity_providers" "api" {
   }
 }
 
-resource "aws_ecs_task_definition" "api" {
-  family                   = "taskdef-gbapi-${var.environment}"
-  requires_compatibilities = ["FARGATE"]
-  container_definitions = jsonencode([
-    {
-      name  = "dotnet-api"
-      image = ""
-    }
-  ])
-}
+# resource "aws_ecs_task_definition" "api" {
+#   family                   = "taskdef-gbapi-${var.environment}"
+#   requires_compatibilities = ["FARGATE"]
+#   container_definitions = jsonencode([
+#     {
+#       name  = "dotnet-api"
+#       image = ""
+#     }
+#   ])
+# }
 
-resource "aws_ecs_service" "api" {
-  name            = "service-gb-api-${var.environment}"
-  cluster         = aws_ecs_cluster.api.id
-  task_definition = aws_ecs_task_definition.api.id
-}
+# resource "aws_ecs_service" "api" {
+#   name            = "service-gb-api-${var.environment}"
+#   cluster         = aws_ecs_cluster.api.id
+#   task_definition = aws_ecs_task_definition.api.id
+#   tags = local.tags
+# }
 
 
 # Frontend
