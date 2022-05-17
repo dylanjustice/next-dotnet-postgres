@@ -1,11 +1,19 @@
-FROM bitnami/dotnet-sdk:5.0.407 AS build
+FROM mcr.microsoft.com/dotnet/aspnet:5.0.16 as base
 WORKDIR /api
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0.407 as build
+WORKDIR /api
+
 COPY . .
 RUN dotnet restore
+
+FROM build as publish
+COPY . .
 RUN dotnet publish --configuration release -o release
 
-FROM bitnami/aspnet-core:5.0.16
+FROM base as final
 WORKDIR /api
-COPY --from=build /api/release .
+COPY --from=publish /api/release .
+
 ENTRYPOINT [ "dotnet", "DylanJustice.Demo.Presentation.Web.dll" ]
 
