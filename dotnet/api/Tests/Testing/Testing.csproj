@@ -20,6 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Business\Core\Core.csproj"/>
-    <ProjectReference Include="..\..\Infrastructure\Data.PostgreSQL\Data.PostgreSql.csproj"/>
+    <ProjectReference Include="..\..\Infrastructure\Data.PostgreSql\Data.PostgreSql.csproj"/>
   </ItemGroup>
 </Project>
