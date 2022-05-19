@@ -1,5 +1,4 @@
 
-
 locals {
   cidr_block   = "10.0.0.0/16"
   s3_origin_id = "djustice-nextapp"
@@ -24,56 +23,119 @@ resource "aws_s3_bucket_acl" "logs_acl" {
 
 # IAM
 
+data "aws_iam_policy_document" "fargate_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+resource "aws_iam_role" "fargate" {
+  name                = "fargate"
+  assume_role_policy  = data.aws_iam_policy_document.fargate_assume_role.json
+  path                = "/"
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  #TODO: Get AWS Secret value??
+}
 
 # Network
 ## VPC
-#TODO: Rework VPC from scratch
 resource "aws_vpc" "main" {
-  cidr_block           = local.cidr_block
+  cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = local.tags
+  tags = merge(local.tags, {
+    Name = "vpc-gb-${var.environment}"
+  })
+}
+resource "aws_vpc" "mockaroo" {
+  cidr_block           = "10.1.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = merge(local.tags, {
+    Name = "vpc-mockaroo-${var.environment}"
+  })
+}
+
+resource "aws_subnet" "mockaroo_private_1" {
+  vpc_id            = aws_vpc.mockaroo.id
+  cidr_block        = "10.1.100.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+  tags = merge(local.tags, {
+    Name = "snet-mockaroo-private-1"
+  })
+}
+
+resource "aws_subnet" "mockaroo_private_2" {
+  vpc_id            = aws_vpc.mockaroo.id
+  cidr_block        = "10.1.200.0/24"
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = merge(local.tags, {
+    Name = "snet-mockaroo-private-2"
+  })
+}
+resource "aws_subnet" "mockaroo_public_0" {
+  vpc_id            = aws_vpc.mockaroo.id
+  cidr_block        = "10.1.0.0/24"
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = merge(local.tags, {
+    Name = "snet-mockaroo-public-0"
+  })
+}
+resource "aws_subnet" "mockaroo_public_1" {
+  vpc_id            = aws_vpc.mockaroo.id
+  cidr_block        = "10.1.1.0/24"
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = merge(local.tags, {
+    Name = "snet-mockaroo-public-1"
+  })
 }
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
+}
+resource "aws_internet_gateway" "mockaroo_gw" {
+  vpc_id = aws_vpc.mockaroo.id
 }
 
 resource "aws_subnet" "public_0" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.0.0/24"
   availability_zone = data.aws_availability_zones.available.names[0]
-  tags = local.tags
+  tags              = local.tags
 }
 resource "aws_subnet" "public_1" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = data.aws_availability_zones.available.names[1]
-  tags = local.tags
+  tags              = local.tags
 }
 resource "aws_subnet" "private_00" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.100.0/24"
   availability_zone = data.aws_availability_zones.available.names[0]
-  tags = local.tags
+  tags              = local.tags
 }
 resource "aws_subnet" "private_10" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.200.0/24"
   availability_zone = data.aws_availability_zones.available.names[1]
-  tags = local.tags
+  tags              = local.tags
 }
 resource "aws_subnet" "private_01" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.101.0/24"
   availability_zone = data.aws_availability_zones.available.names[0]
-  tags = local.tags
+  tags              = local.tags
 }
 resource "aws_subnet" "private_11" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.201.0/24"
   availability_zone = data.aws_availability_zones.available.names[1]
-  tags = local.tags
+  tags              = local.tags
 }
 
 resource "aws_route_table" "public" {
@@ -85,24 +147,45 @@ resource "aws_route_table" "public" {
 }
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
-  route = []
+  route  = []
 }
 
 resource "aws_route_table_association" "private_00" {
-  subnet_id = aws_subnet.private_00.id
+  subnet_id      = aws_subnet.private_00.id
   route_table_id = aws_route_table.private.id
 }
 resource "aws_route_table_association" "private_01" {
-  subnet_id = aws_subnet.private_01.id
+  subnet_id      = aws_subnet.private_01.id
   route_table_id = aws_route_table.private.id
 }
 resource "aws_route_table_association" "private_10" {
-  subnet_id = aws_subnet.private_10.id
+  subnet_id      = aws_subnet.private_10.id
   route_table_id = aws_route_table.private.id
 }
 resource "aws_route_table_association" "private_11" {
-  subnet_id = aws_subnet.private_11.id
+  subnet_id      = aws_subnet.private_11.id
   route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table" "mockaroo_public" {
+  vpc_id = aws_vpc.mockaroo.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.mockaroo_gw.id
+  }
+}
+resource "aws_route_table" "mockaroo_private" {
+  vpc_id = aws_vpc.mockaroo.id
+  route  = []
+}
+
+resource "aws_route_table_association" "mockaroo_private_00" {
+  subnet_id      = aws_subnet.mockaroo_private_1.id
+  route_table_id = aws_route_table.mockaroo_private.id
+}
+resource "aws_route_table_association" "mockaroo_private_01" {
+  subnet_id      = aws_subnet.mockaroo_private_2.id
+  route_table_id = aws_route_table.mockaroo_private.id
 }
 
 resource "aws_security_group" "db" {
@@ -127,7 +210,7 @@ resource "aws_security_group" "db" {
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "main"
   subnet_ids = [aws_subnet.private_01.id, aws_subnet.private_11.id]
-  tags = local.tags
+  tags       = local.tags
 }
 
 # Database
@@ -145,7 +228,7 @@ resource "aws_db_instance" "db" {
   vpc_security_group_ids = [aws_security_group.db.id]
   identifier             = "db-gravitybootsapi-db-${var.environment}"
   multi_az               = var.environment == "production" ? true : false
-  tags = local.tags
+  tags                   = local.tags
 }
 
 # EC2
@@ -175,8 +258,34 @@ resource "aws_security_group" "allow_tls" {
 
 # API
 # Elastic container registry
-resource "aws_ecr_repository" "repo" {
-  name                 = "ecr-gravityboots"
+resource "aws_ecr_repository" "api" {
+  name                 = "gravityboots-api"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  encryption_configuration {
+    encryption_type = "KMS"
+  }
+  tags = local.tags
+}
+
+resource "aws_ecr_repository" "mockaroo" {
+  name                 = "gravityboots-mockaroo"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  encryption_configuration {
+    encryption_type = "KMS"
+  }
+  tags = local.tags
+}
+
+resource "aws_ecr_repository" "frontend" {
+  name                 = "gravityboots-frontend"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -199,6 +308,25 @@ resource "aws_ecs_cluster" "api" {
   }
   tags = local.tags
 }
+resource "aws_ecs_cluster" "mockaroo" {
+  name = "cluster-gb-mockaroo"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+  tags = local.tags
+}
+
+resource "aws_ecs_cluster" "frontend" {
+  name = "cluster-gb-mockaroo"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+  tags = local.tags
+}
 
 resource "aws_ecs_cluster_capacity_providers" "api" {
   cluster_name       = aws_ecs_cluster.api.name
@@ -210,24 +338,164 @@ resource "aws_ecs_cluster_capacity_providers" "api" {
   }
 }
 
-# resource "aws_ecs_task_definition" "api" {
-#   family                   = "taskdef-gbapi-${var.environment}"
-#   requires_compatibilities = ["FARGATE"]
-#   container_definitions = jsonencode([
-#     {
-#       name  = "dotnet-api"
-#       image = ""
-#     }
-#   ])
-# }
+resource "aws_ecs_task_definition" "api" {
+  family                   = "taskdef-gbapi-${var.environment}"
+  requires_compatibilities = ["FARGATE"]
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+  cpu                   = 1024
+  memory                = 2048
+  network_mode          = "awsvpc"
+  execution_role_arn    = aws_iam_role.fargate.arn
+  container_definitions = <<TASK_DEFINITION
+  [
+    {
+      "name": "dotnet-api",
+      "image": "${aws_ecr_repository.api.repository_url}:latest",
+      "cpu": 10,
+      "memory": 512,
+      "environment": [
+        {
+          "name": "ConnectionStrings__Api",
+          "value": "Host=${aws_db_instance.db.address};Port=${aws_db_instance.db.port};Database=GravityBoots;Username=${var.db_username};Password=${var.db_password}"
+        }
+      ],
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        },
+        {
+          "containerPort": 443,
+          "hostPort": 443
+        }
+      ]
+    }
+  ]
+  TASK_DEFINITION
+}
 
-# resource "aws_ecs_service" "api" {
-#   name            = "service-gb-api-${var.environment}"
-#   cluster         = aws_ecs_cluster.api.id
-#   task_definition = aws_ecs_task_definition.api.id
-#   tags = local.tags
-# }
+resource "aws_ecs_service" "api" {
+  name            = "service-gb-api-${var.environment}"
+  cluster         = aws_ecs_cluster.api.id
+  task_definition = aws_ecs_task_definition.api.id
+  desired_count   = 2
+  capacity_provider_strategy {
+    base = 1
+    capacity_provider = "FARGATE"
+    weight = 100
+  }
+  network_configuration {
+    subnets = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+  }
+  tags = local.tags
+}
 
+resource "aws_ecs_cluster_capacity_providers" "mockaroo" {
+  cluster_name       = aws_ecs_cluster.mockaroo.name
+  capacity_providers = ["FARGATE"]
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
+}
+
+resource "aws_ecs_task_definition" "mockaroo" {
+  family                   = "taskdef-gbmock-${var.environment}"
+  requires_compatibilities = ["FARGATE"]
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+  cpu                = 1024
+  memory             = 2048
+  network_mode       = "awsvpc"
+  execution_role_arn = aws_iam_role.fargate.arn
+  container_definitions = jsonencode([
+    {
+      name  = "mockaroo"
+      image = "${aws_ecr_repository.mockaroo.repository_url}:latest"
+
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        },
+        {
+          containerPort = 443
+          hostPort      = 443
+        },
+      ]
+    }
+  ])
+}
+
+resource "aws_ecs_service" "mockaroo" {
+  name            = "service-gb-mockaroo-${var.environment}"
+  cluster         = aws_ecs_cluster.mockaroo.id
+  task_definition = aws_ecs_task_definition.mockaroo.id
+  capacity_provider_strategy {
+    base = 1
+    capacity_provider = "FARGATE"
+    weight = 100
+  }
+  network_configuration {
+    subnets = [aws_subnet.mockaroo_private_1.id, aws_subnet.mockaroo_private_2.id]
+  }
+  tags = local.tags
+}
+
+resource "aws_ecs_cluster_capacity_providers" "frontend" {
+  cluster_name       = aws_ecs_cluster.frontend.name
+  capacity_providers = ["FARGATE"]
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
+}
+resource "aws_ecs_task_definition" "frontend" {
+  family                   = "taskdef-gbfrontend-${var.environment}"
+  requires_compatibilities = ["FARGATE"]
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+  cpu                = 1024
+  memory             = 2048
+  network_mode       = "awsvpc"
+  execution_role_arn = aws_iam_role.fargate.arn
+  container_definitions = jsonencode([
+    {
+      name  = "frontend"
+      image = "${aws_ecr_repository.frontend.repository_url}:latest"
+      portMappings = [
+        {
+          containerPort = 3000
+          hostPort      = 3000
+        }
+      ]
+    }
+  ])
+}
+
+resource "aws_ecs_service" "frontend" {
+  name            = "service-gb-frontend-${var.environment}"
+  cluster         = aws_ecs_cluster.frontend.id
+  task_definition = aws_ecs_task_definition.frontend.id
+  capacity_provider_strategy {
+    base = 1
+    capacity_provider = "FARGATE"
+    weight = 100
+  }
+  network_configuration {
+    subnets = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+  }
+  tags = local.tags
+}
 
 # Frontend
 resource "aws_cloudfront_origin_access_identity" "oai" {}
@@ -256,7 +524,6 @@ resource "aws_s3_bucket_policy" "b_policy" {
   bucket = aws_s3_bucket.b.id
   policy = data.aws_iam_policy_document.s3_policy.json
 }
-
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
