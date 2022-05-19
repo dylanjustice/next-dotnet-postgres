@@ -94,12 +94,7 @@ resource "aws_subnet" "mockaroo_public_1" {
   })
 }
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
-}
-resource "aws_internet_gateway" "mockaroo_gw" {
-  vpc_id = aws_vpc.mockaroo.id
-}
+
 
 resource "aws_subnet" "public_0" {
   vpc_id            = aws_vpc.main.id
@@ -166,6 +161,14 @@ resource "aws_route_table_association" "private_11" {
   subnet_id      = aws_subnet.private_11.id
   route_table_id = aws_route_table.private.id
 }
+resource "aws_route_table_association" "public_0" {
+  subnet_id      = aws_subnet.public_0.id
+  route_table_id = aws_route_table.public.id
+}
+resource "aws_route_table_association" "public_1" {
+  subnet_id      = aws_subnet.public_1.id
+  route_table_id = aws_route_table.public.id
+}
 
 resource "aws_route_table" "mockaroo_public" {
   vpc_id = aws_vpc.mockaroo.id
@@ -188,6 +191,102 @@ resource "aws_route_table_association" "mockaroo_private_01" {
   route_table_id = aws_route_table.mockaroo_private.id
 }
 
+resource "aws_network_acl" "main" {
+  vpc_id     = aws_vpc.main.id
+  subnet_ids = [aws_subnet.public_0.id, aws_subnet.public_1.id]
+  tags = merge(local.tags, {
+    Name = "-public-nacl-api"
+  })
+  egress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+  ingress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+}
+resource "aws_network_acl" "mockaroo" {
+  vpc_id     = aws_vpc.mockaroo.id
+  subnet_ids = [aws_subnet.mockaroo_public_0.id, aws_subnet.mockaroo_public_1.id]
+  tags = merge(local.tags, {
+    Name = "-public-nacl-mockaroo"
+  })
+  egress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+  ingress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+}
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+}
+resource "aws_internet_gateway" "mockaroo_gw" {
+  vpc_id = aws_vpc.mockaroo.id
+}
+
+resource "aws_eip" "main_0" {
+  vpc = true
+}
+resource "aws_eip" "main_1" {
+  vpc = true
+}
+resource "aws_eip" "mockaroo_0" {
+  vpc = true
+}
+resource "aws_eip" "mockaroo_1" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "main_0" {
+  allocation_id = aws_eip.main_0.id
+  subnet_id     = aws_subnet.public_0.id
+  tags = merge(local.tags, {
+    Name = "nat-main0"
+  })
+}
+resource "aws_nat_gateway" "main_1" {
+  allocation_id = aws_eip.main_1.id
+  subnet_id     = aws_subnet.public_1.id
+  tags = merge(local.tags, {
+    Name = "nat-main1"
+  })
+}
+resource "aws_nat_gateway" "mockaroo_0" {
+  allocation_id = aws_eip.mockaroo_0.id
+  subnet_id     = aws_subnet.mockaroo_public_0.id
+  tags = merge(local.tags, {
+    Name = "nat-mockaroo-0"
+  })
+}
+resource "aws_nat_gateway" "mockaroo_1" {
+  allocation_id = aws_eip.mockaroo_1.id
+  subnet_id     = aws_subnet.mockaroo_public_1.id
+  tags = merge(local.tags, {
+    Name = "nat-mockaroo-0"
+  })
+}
+
 resource "aws_security_group" "db" {
   name        = "secgroup-gravityboots-db-${var.environment}"
   description = "Traffic to the database"
@@ -195,8 +294,8 @@ resource "aws_security_group" "db" {
   ingress {
     protocol    = "tcp"
     description = "App Subnet traffic to database"
-    from_port   = 443
-    to_port     = 1433
+    from_port   = 5432
+    to_port     = 5432
     cidr_blocks = [local.cidr_block]
   }
   egress {
@@ -207,6 +306,138 @@ resource "aws_security_group" "db" {
   }
   tags = local.tags
 }
+resource "aws_security_group" "alb" {
+  name        = "secgroup-gravityboots-alb-${var.environment}"
+  description = "Traffic to the application load balancer"
+  vpc_id      = aws_vpc.main.id
+  ingress {
+    protocol    = "tcp"
+    description = "Ingress HTTP to ALB"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    protocol    = "tcp"
+    description = "Ingress HTTP to ALB"
+    from_port   = 80
+    to_port     = 3000
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    protocol         = "tcp"
+    description      = "Ingress Ipv6 traffic to ALB"
+    from_port        = 80
+    to_port          = 80
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = local.tags
+}
+resource "aws_security_group" "ecs" {
+  name        = "secgroup-gravityboots-ecs-${var.environment}"
+  description = "ECS SG"
+  vpc_id      = aws_vpc.main.id
+  ingress {
+    protocol        = "tcp"
+    to_port         = 65535
+    from_port       = 0
+    security_groups = [aws_security_group.alb.id]
+  }
+  egress {
+    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 65535
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+}
+resource "aws_lb" "main" {
+  name               = "alb-gravityboots"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = [aws_subnet.public_0.id, aws_subnet.public_1.id]
+  security_groups    = [aws_security_group.alb.id]
+}
+
+resource "aws_lb_target_group" "api_01" {
+  name        = "tg-gravityboots-api-01"
+  target_type = "ip"
+  protocol    = "HTTP"
+  port        = 80
+  vpc_id      = aws_vpc.main.id
+}
+resource "aws_lb_target_group" "frontend_01" {
+  name        = "tg-gravityboots-frontend-01"
+  target_type = "ip"
+  protocol    = "HTTP"
+  port        = 3000
+  vpc_id      = aws_vpc.main.id
+
+}
+resource "aws_lb_listener" "api" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = 80
+  protocol          = "HTTP"
+  default_action {
+    target_group_arn = aws_lb_target_group.api_01.arn
+    type             = "forward"
+  }
+}
+resource "aws_lb_listener" "frontend" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = 3000
+  protocol          = "HTTP"
+  default_action {
+    target_group_arn = aws_lb_target_group.frontend_01.arn
+    type             = "forward"
+  }
+}
+
+
+
+
+# resource "aws_lb" "mockaroo" {
+#   name               = "alb-mockaroo"
+#   internal           = false
+#   load_balancer_type = "application"
+#   subnets            = [aws_subnet.mockaroo_0.id, aws_subnet.mockaroo_1.id]
+#   security_groups    = [aws_security_group.alb.id]
+# }
+
+# resource "aws_lb_listener" "api" {
+#   load_balancer_arn = aws_lb.main.arn
+#   port              = 80
+#   protocol          = "HTTP"
+#   default_action {
+#     type = "fixed-response"
+
+#     fixed_response {
+#       content_type = "text/plain"
+#       message_body = "Fixed response content"
+#       status_code  = "200"
+#     }
+#   }
+# }
+# resource "aws_lb_target_group" "mockaroo" {
+#   name        = "tg-gravityboots-mockaroo"
+#   target_type = "ip"
+#   protocol    = "HTTP"
+#   port        = 80
+#   vpc_id      = aws_vpc.mockaroo.id
+# }
+
+# resource "aws_lb_target_group_attachment" "api_0" {
+#   target_group_arn = aws_lb_target_group.api.arn
+#   target_id        = aws_ecs_service.api.
+# }
+
+
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "main"
   subnet_ids = [aws_subnet.private_01.id, aws_subnet.private_11.id]
@@ -298,10 +529,21 @@ resource "aws_ecr_repository" "frontend" {
 }
 
 # ECS
+resource "aws_cloudwatch_log_group" "ecs" {
+  name = "/aws/ecs"
+}
 
 resource "aws_ecs_cluster" "api" {
   name = "cluster-gb-api"
 
+  configuration {
+    execute_command_configuration {
+      logging = "OVERRIDE"
+      log_configuration {
+        cloud_watch_log_group_name = aws_cloudwatch_log_group.ecs.name
+      }
+    }
+  }
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -315,15 +557,31 @@ resource "aws_ecs_cluster" "mockaroo" {
     name  = "containerInsights"
     value = "enabled"
   }
+  configuration {
+    execute_command_configuration {
+      logging = "OVERRIDE"
+      log_configuration {
+        cloud_watch_log_group_name = aws_cloudwatch_log_group.ecs.name
+      }
+    }
+  }
   tags = local.tags
 }
 
 resource "aws_ecs_cluster" "frontend" {
-  name = "cluster-gb-mockaroo"
+  name = "cluster-gb-frontend"
 
   setting {
     name  = "containerInsights"
     value = "enabled"
+  }
+  configuration {
+    execute_command_configuration {
+      logging = "OVERRIDE"
+      log_configuration {
+        cloud_watch_log_group_name = aws_cloudwatch_log_group.ecs.name
+      }
+    }
   }
   tags = local.tags
 }
@@ -371,7 +629,16 @@ resource "aws_ecs_task_definition" "api" {
           "containerPort": 443,
           "hostPort": 443
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/ecs/dotnet-api-container",
+          "awslogs-region": "us-east-2",
+          "awslogs-create-group": "true",
+          "awslogs-stream-prefix": "dotnet-api"
+        }
+      }
     }
   ]
   TASK_DEFINITION
@@ -383,13 +650,19 @@ resource "aws_ecs_service" "api" {
   task_definition = aws_ecs_task_definition.api.id
   desired_count   = 2
   capacity_provider_strategy {
-    base = 1
+    base              = 1
     capacity_provider = "FARGATE"
-    weight = 100
+    weight            = 100
   }
   network_configuration {
     subnets = [aws_subnet.private_00.id, aws_subnet.private_10.id]
   }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.api_01.arn
+    container_name   = "dotnet-api"
+    container_port   = 80
+  }
+
   tags = local.tags
 }
 
@@ -410,41 +683,60 @@ resource "aws_ecs_task_definition" "mockaroo" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
-  cpu                = 1024
-  memory             = 2048
-  network_mode       = "awsvpc"
-  execution_role_arn = aws_iam_role.fargate.arn
-  container_definitions = jsonencode([
+  cpu                   = 1024
+  memory                = 2048
+  network_mode          = "awsvpc"
+  execution_role_arn    = aws_iam_role.fargate.arn
+  container_definitions = <<TASK_DEFINITION
+   [
     {
-      name  = "mockaroo"
-      image = "${aws_ecr_repository.mockaroo.repository_url}:latest"
-
-      portMappings = [
+      "name": "mockaroo",
+      "image": "${aws_ecr_repository.mockaroo.repository_url}:latest",
+      "cpu": 10,
+      "memory": 512,
+      "portMappings": [
         {
-          containerPort = 80
-          hostPort      = 80
+          "containerPort": 80,
+          "hostPort": 80
         },
         {
-          containerPort = 443
-          hostPort      = 443
-        },
-      ]
+          "containerPort": 443,
+          "hostPort": 443
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/ecs/mockaroo-container",
+          "awslogs-region": "us-east-2",
+          "awslogs-create-group": "true",
+          "awslogs-stream-prefix": "mockaroo"
+        }
+      }
     }
-  ])
+  ]
+  TASK_DEFINITION
 }
 
 resource "aws_ecs_service" "mockaroo" {
   name            = "service-gb-mockaroo-${var.environment}"
   cluster         = aws_ecs_cluster.mockaroo.id
   task_definition = aws_ecs_task_definition.mockaroo.id
+  desired_count   = 2
   capacity_provider_strategy {
-    base = 1
+    base              = 1
     capacity_provider = "FARGATE"
-    weight = 100
+    weight            = 100
   }
   network_configuration {
-    subnets = [aws_subnet.mockaroo_private_1.id, aws_subnet.mockaroo_private_2.id]
+    subnets          = [aws_subnet.mockaroo_private_1.id, aws_subnet.mockaroo_private_2.id]
+    assign_public_ip = true
   }
+  # load_balancer {
+  #   target_group_arn = aws_lb_target_group.mockaroo.arn
+  #   container_name = "mockaroo"
+  #   container_port = 80
+  # }
   tags = local.tags
 }
 
@@ -464,35 +756,55 @@ resource "aws_ecs_task_definition" "frontend" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
-  cpu                = 1024
-  memory             = 2048
-  network_mode       = "awsvpc"
-  execution_role_arn = aws_iam_role.fargate.arn
-  container_definitions = jsonencode([
+  cpu                   = 1024
+  memory                = 2048
+  network_mode          = "awsvpc"
+  execution_role_arn    = aws_iam_role.fargate.arn
+  container_definitions = <<TASK_DEFINITION
+   [
     {
-      name  = "frontend"
-      image = "${aws_ecr_repository.frontend.repository_url}:latest"
-      portMappings = [
+      "name": "frontend",
+      "image": "${aws_ecr_repository.frontend.repository_url}:latest",
+      "cpu": 10,
+      "memory": 512,
+      "portMappings": [
         {
-          containerPort = 3000
-          hostPort      = 3000
+          "containerPort": 3000,
+          "hostPort": 3000
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/aws/ecs/frontend-container",
+          "awslogs-region": "us-east-2",
+          "awslogs-create-group": "true",
+          "awslogs-stream-prefix": "frontend"
+        }
+      }
     }
-  ])
+  ]
+  TASK_DEFINITION
 }
 
 resource "aws_ecs_service" "frontend" {
   name            = "service-gb-frontend-${var.environment}"
   cluster         = aws_ecs_cluster.frontend.id
   task_definition = aws_ecs_task_definition.frontend.id
+  desired_count   = 2
   capacity_provider_strategy {
-    base = 1
+    base              = 1
     capacity_provider = "FARGATE"
-    weight = 100
+    weight            = 100
   }
   network_configuration {
-    subnets = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+    subnets          = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+    assign_public_ip = true
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.frontend_01.arn
+    container_name   = "frontend"
+    container_port   = 3000
   }
   tags = local.tags
 }
