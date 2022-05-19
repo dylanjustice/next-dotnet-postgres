@@ -2,11 +2,15 @@
 locals {
   cidr_block   = "10.0.0.0/16"
   s3_origin_id = "djustice-nextapp"
+  region = "us-east-2"
 
   tags = {
     project = "next-dotnet-postgres"
   }
 }
+
+data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
@@ -25,7 +29,9 @@ resource "aws_s3_bucket_acl" "logs_acl" {
 
 data "aws_iam_policy_document" "fargate_assume_role" {
   statement {
-    actions = ["sts:AssumeRole"]
+    actions = [
+      "sts:AssumeRole"
+    ]
     effect  = "Allow"
     principals {
       type        = "Service"
@@ -33,9 +39,28 @@ data "aws_iam_policy_document" "fargate_assume_role" {
     }
   }
 }
+data "aws_iam_policy_document" "logs" {
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:${data.aws_partition.current.partition}:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:*",
+      "arn:${data.aws_partition.current.partition}:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-stream:*"
+    ]
+  }
+}
+
 resource "aws_iam_role" "fargate" {
   name                = "fargate"
   assume_role_policy  = data.aws_iam_policy_document.fargate_assume_role.json
+  inline_policy {
+    name = "AllowCloudwatch"
+    policy = data.aws_iam_policy_document.logs.json
+  }
   path                = "/"
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
   #TODO: Get AWS Secret value??
@@ -140,26 +165,36 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.gw.id
   }
 }
-resource "aws_route_table" "private" {
+resource "aws_route_table" "private_0" {
   vpc_id = aws_vpc.main.id
-  route  = []
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main_0.id
+  }
+}
+resource "aws_route_table" "private_1" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main_1.id
+  }
 }
 
 resource "aws_route_table_association" "private_00" {
   subnet_id      = aws_subnet.private_00.id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private_0.id
 }
 resource "aws_route_table_association" "private_01" {
   subnet_id      = aws_subnet.private_01.id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private_0.id
 }
 resource "aws_route_table_association" "private_10" {
   subnet_id      = aws_subnet.private_10.id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private_1.id
 }
 resource "aws_route_table_association" "private_11" {
   subnet_id      = aws_subnet.private_11.id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private_1.id
 }
 resource "aws_route_table_association" "public_0" {
   subnet_id      = aws_subnet.public_0.id
@@ -656,6 +691,7 @@ resource "aws_ecs_service" "api" {
   }
   network_configuration {
     subnets = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+    security_groups = [aws_security_group.ecs.id]
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.api_01.arn
@@ -799,7 +835,7 @@ resource "aws_ecs_service" "frontend" {
   }
   network_configuration {
     subnets          = [aws_subnet.private_00.id, aws_subnet.private_10.id]
-    assign_public_ip = true
+    security_groups = [aws_security_group.ecs.id]
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.frontend_01.arn
