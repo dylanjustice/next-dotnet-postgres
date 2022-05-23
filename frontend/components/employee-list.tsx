@@ -23,10 +23,11 @@ const EmployeeList: React.FC<EmployeeListProps> = (
     input: RequestInfo,
     init?: RequestInit | undefined
   ) => fetch(input, init).then((res) => res.json());
+  const baseUrl = process.env.API_BASE_URL
 
   const [shouldFetch, setShouldFetch] = useState<boolean>(true);
   const { data, error } = useSWR<Result<Array<Employee>>, any>(
-    `/api/v1/employees?fetch=${shouldFetch}`,
+    `${baseUrl}/employees?fetch=${shouldFetch}`,
     fetcher
   );
 

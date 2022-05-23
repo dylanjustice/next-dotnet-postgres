@@ -7,6 +7,7 @@ using AndcultureCode.CSharp.Core.Interfaces.Data;
 using Mockaroo.Business.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using AndcultureCode.CSharp.Core;
+using AndcultureCode.CSharp.Core.Extensions;
 
 namespace Mockaroo.Business.Conductors.Domain
 {
@@ -29,8 +30,12 @@ namespace Mockaroo.Business.Conductors.Domain
         public IResult<IEnumerable<User>> FindAll() => Do<IEnumerable<User>>.Try((r) =>
         {
             var usersResult = _usersProvider.ListUsers().Result;
+            if (usersResult.HasErrors)
+            {
+                r.AddErrors(usersResult.Errors);
+            }
 
-            return usersResult;
+            return usersResult.ResultObject;
         }).Result;
 
         #endregion IUserReadConductor Implementation

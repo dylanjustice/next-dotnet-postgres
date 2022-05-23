@@ -6,6 +6,6 @@ namespace Mockaroo.Business.Core.Interfaces
 {
     public interface IUsersProvider : IProvider
     {
-        Task<List<User>> ListUsers();
+        Task<IResult<List<User>>> ListUsers();
     }
 }

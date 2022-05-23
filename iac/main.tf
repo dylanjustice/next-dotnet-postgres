@@ -529,6 +529,15 @@ resource "aws_lb_listener" "api" {
     type             = "forward"
   }
 }
+# resource "aws_lb_listener" "api_https" {
+#   load_balancer_arn = aws_lb.main.arn
+#   port              = 443
+#   protocol          = "HTTPS"
+#   default_action {
+#     target_group_arn = aws_lb_target_group.api_01.arn
+#     type             = "forward"
+#   }
+# }
 resource "aws_lb_listener" "frontend" {
   load_balancer_arn = aws_lb.main.arn
   port              = 3000
@@ -548,6 +557,15 @@ resource "aws_lb_listener" "mockaroo" {
     type             = "forward"
   }
 }
+# resource "aws_lb_listener" "mockaroo_https" {
+#   load_balancer_arn = aws_lb.mockaroo.arn
+#   port              = 443
+#   protocol          = "HTTPS"
+#   default_action {
+#     target_group_arn = aws_lb_target_group.mockaroo.arn
+#     type             = "forward"
+#   }
+# }
 
 
 resource "aws_db_subnet_group" "db_subnet_group" {
@@ -705,6 +723,10 @@ resource "aws_ecs_task_definition" "api" {
         {
           "name": "ConnectionStrings__Api",
           "value": "Host=${aws_db_instance.db.address};Port=${aws_db_instance.db.port};Database=GravityBoots;Username=${var.db_username};Password=${var.db_password}"
+        },
+        {
+          "name": "EmployeeApi__BaseUri",
+          "value": "http://${aws_lb.mockaroo.dns_name}"
         }
       ],
       "portMappings": [
@@ -867,6 +889,12 @@ resource "aws_ecs_task_definition" "frontend" {
           "hostPort": 3000
         }
       ],
+      "environment": [
+        {
+          "name": "API_BASE_URL",
+          "value": "http://${aws_lb.main.dns_name}/api/v1"
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -919,8 +947,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  default_root_object = "index.html"
-
   logging_config {
     include_cookies = false
     bucket          = aws_s3_bucket.logs.bucket_domain_name

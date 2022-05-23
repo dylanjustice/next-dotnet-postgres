@@ -47,7 +47,8 @@ namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
                 .AddConductors(configuration)
                 .AddProviders()
                 .AddClients(configuration)
-                .AddMiddleware(configuration);
+                .AddMiddleware(configuration)
+                .AddCorsPolicies(configuration);
 
             return services;
         }
@@ -167,5 +168,18 @@ namespace DylanJustice.Demo.Presentation.Web.Extensions.Startup
         {
             options.ConstraintMap.Add(ApiSettings.ROUTING_CULTURE_CONSTRAINT, typeof(CultureRouteConstraint));
         });
+
+        public static IServiceCollection AddCorsPolicies(this IServiceCollection services, IConfigurationRoot configuration)
+        {
+            var frontendOrigin = configuration.GetValue<string>("FrontendOrigin");
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: CorsPolicyNames.FRONTEND_ORIGIN, policy =>
+                {
+                    policy.WithOrigins(frontendOrigin);
+                });
+            });
+            return services;
+        }
     }
 }

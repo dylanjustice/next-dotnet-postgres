@@ -2,6 +2,7 @@
 using AndcultureCode.CSharp.Core;
 using AndcultureCode.CSharp.Core.Extensions;
 using AndcultureCode.CSharp.Core.Interfaces;
+using AndcultureCode.CSharp.Core.Models.Errors;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace Mockaroo.Infrastructure.Data.Mockaroo.Providers
     public class UsersProvider : IUsersProvider
     {
         public const string ERR_GET_USERS_FAILED = "Mockaroo.Infrastructure.Data.Mockaroo.Providers.GetUsersResponse.Unsuccessful";
+        public const string UNHANDLED_EXCEPTION = "Mockaroo.Infrastructure.Data.Mockaroo.Providers.GetUsersResponse.Exception";
         private readonly HttpClient _client;
         private readonly ILogger<UsersProvider> _logger;
         private readonly IMapper _mapper;
@@ -34,24 +36,24 @@ namespace Mockaroo.Infrastructure.Data.Mockaroo.Providers
 
         #region IMockarooProvider Implementation
 
-        public async Task<List<User>> ListUsers()
+        public async Task<IResult<List<User>>> ListUsers()
         {
             try
             {
                 var listResponseMessage = await _client.GetAsync("/users");
                 if (!listResponseMessage.IsSuccessStatusCode)
                 {
-                    _logger.LogError($"Key: {ERR_GET_USERS_FAILED}, Message: Error occurred getting users. Response does not indicate success. ({listResponseMessage.StatusCode})");
+                    return new Result<List<User>>(ERR_GET_USERS_FAILED, $"Message: Error occurred getting users. Response does not indicate success. ({listResponseMessage.StatusCode})");
                 }
                 var content = await listResponseMessage.Content.ReadAsStringAsync();
                 var users = JsonConvert.DeserializeObject<List<MockarooUserDto>>(content);
 
-                return _mapper.Map<List<User>>(users);
+                return new Result<List<User>>(_mapper.Map<List<User>>(users));
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return new List<User>();
+                return new Result<List<User>>(UNHANDLED_EXCEPTION, ex.Message);
             }
         }
 

@@ -182,11 +182,10 @@ namespace DylanJustice.Demo.Presentation.Web
             // Internationlization
             app.UseRequestLocalization(requestOptions.Value);
 
-            // SPA static file routing
-            app.UseSpaStaticFiles(); // Should be called before UseRouting/UseEndpoints
 
             // Backend MVC route mapping - Default/bare route "/" falls through to SPA
             app.UseRouting(); // Adds metadata to controllers based upon request path
+            app.UseCors(CorsPolicyNames.FRONTEND_ORIGIN);
 
             // Authentication and authorization middleware should be configured here
             app.UseCookieAuthentication();
@@ -204,20 +203,6 @@ namespace DylanJustice.Demo.Presentation.Web
                 if (!env.IsDevelopment())
                 {
                     routes.MapFallbackToController(action: "Index", controller: "Home"); // Home Controller handles authorization
-                }
-            });
-
-            // Configure SPA routing
-            // ------------------------------------------------------------------------------------
-            // - In development, "/" is proxied to webpack dev server
-            // - In non-development, "/" serves a compiled version of react's index.html from /wwwroot.
-            //   with all javascript, css and image assets absolutely referenced in Amazon CloudFront/S3
-            app.UseSpa(spa =>
-            {
-                if (env.IsDevelopment())
-                {
-                    Console.WriteLine($"Proxying frontend from {FRONTEND_DEVELOPMENT_SERVER_URL}");
-                    spa.UseProxyToSpaDevelopmentServer(FRONTEND_DEVELOPMENT_SERVER_URL);
                 }
             });
         }
