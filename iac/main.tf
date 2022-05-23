@@ -633,6 +633,32 @@ resource "aws_ecr_repository" "frontend" {
   tags = local.tags
 }
 
+# Envoy
+resource "aws_ecr_repository" "envoy_dotnet_api" {
+  name                 = "dotnet-api-envoy"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  encryption_configuration {
+    encryption_type = "KMS"
+  }
+  tags = local.tags
+}
+resource "aws_ecr_repository" "envoy_mockaroo" {
+  name                 = "mockaroo-envoy"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  encryption_configuration {
+    encryption_type = "KMS"
+  }
+  tags = local.tags
+}
+
 # ECS
 resource "aws_cloudwatch_log_group" "ecs" {
   name = "/aws/ecs"
@@ -727,6 +753,10 @@ resource "aws_ecs_task_definition" "api" {
         {
           "name": "EmployeeApi__BaseUri",
           "value": "http://${aws_lb.mockaroo.dns_name}"
+        },
+        {
+          "name": "FrontendOrigin",
+          "value": "http://alb-gravityboots-1152889306.us-east-2.elb.amazonaws.com:3000"
         }
       ],
       "portMappings": [
@@ -748,7 +778,24 @@ resource "aws_ecs_task_definition" "api" {
           "awslogs-stream-prefix": "dotnet-api"
         }
       }
+    },
+    {
+      "image": "${aws_ecr_repository.envoy_dotnet_api.repository_url}:latest",
+      "name": "envoy"
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 80
+        },
+        {
+          "hostPort": 8081,
+          "protocol": "tcp",
+          "containerPort": 8081
+        }
+      ],
     }
+
   ]
   TASK_DEFINITION
 }
@@ -829,6 +876,22 @@ resource "aws_ecs_task_definition" "mockaroo" {
           "awslogs-stream-prefix": "mockaroo"
         }
       }
+    },
+    {
+      "image": "${aws_ecr_repository.envoy_mockaroo.repository_url}:latest",
+      "name": "envoy"
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 80
+        },
+        {
+          "hostPort": 8081,
+          "protocol": "tcp",
+          "containerPort": 8081
+        }
+      ],
     }
   ]
   TASK_DEFINITION

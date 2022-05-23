@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy:latest
+FROM envoyproxy/envoy:v1.21-latest
 
-COPY service-envoy.yaml /etc/envoy/service-envoy.yaml
-CMD /usr/local/bin/envoy -c /etc/envoy/service-envoy.yaml
+COPY mockaroo.yaml /etc/envoy/mockaroo.yaml
+CMD /usr/local/bin/envoy -c /etc/envoy/mockaroo.yaml
