@@ -14,5 +14,5 @@ RUN dotnet publish --configuration release -o release
 FROM base as final
 WORKDIR /api
 COPY --from=publish /api/release .
-ENTRYPOINT [ "dotnet", "Mockaroo.Presentation.Web.dll" ]
+ENTRYPOINT [ "dotnet", "Web.dll" ]
 
