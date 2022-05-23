@@ -7,3 +7,6 @@ variable "db_password" {
 variable "db_username" {
   type = string
 }
+variable "mockaroo_api_key" {
+  type = string
+}

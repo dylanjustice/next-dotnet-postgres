@@ -1,7 +1,7 @@
 
 locals {
   cidr_block   = "10.0.0.0/16"
-  s3_origin_id = "djustice-nextapp"
+  cloudfront_origin_id = "djustice-nextapp"
   region = "us-east-2"
 
   tags = {
@@ -85,6 +85,23 @@ resource "aws_vpc" "mockaroo" {
   })
 }
 
+resource "aws_vpc_peering_connection" "main_mockaroo" {
+  peer_owner_id = data.aws_caller_identity.current.account_id
+  peer_vpc_id   = aws_vpc.main.id
+  vpc_id        = aws_vpc.mockaroo.id
+  tags = merge(local.tags, {
+    Name = "main => mockaroo"
+  })
+}
+resource "aws_vpc_peering_connection" "mockaroo_main" {
+  peer_owner_id = data.aws_caller_identity.current.account_id
+  peer_vpc_id   = aws_vpc.mockaroo.id
+  vpc_id        = aws_vpc.main.id
+  tags = merge(local.tags, {
+    Name = "mockaroo => main"
+  })
+}
+
 resource "aws_subnet" "mockaroo_private_1" {
   vpc_id            = aws_vpc.mockaroo.id
   cidr_block        = "10.1.100.0/24"
@@ -105,7 +122,7 @@ resource "aws_subnet" "mockaroo_private_2" {
 resource "aws_subnet" "mockaroo_public_0" {
   vpc_id            = aws_vpc.mockaroo.id
   cidr_block        = "10.1.0.0/24"
-  availability_zone = data.aws_availability_zones.available.names[1]
+  availability_zone = data.aws_availability_zones.available.names[0]
   tags = merge(local.tags, {
     Name = "snet-mockaroo-public-0"
   })
@@ -374,6 +391,40 @@ resource "aws_security_group" "alb" {
   }
   tags = local.tags
 }
+resource "aws_security_group" "mockaroo_alb" {
+  name        = "secgroup-mockaroo-alb-${var.environment}"
+  description = "Traffic to the application load balancer"
+  vpc_id      = aws_vpc.mockaroo.id
+  ingress {
+    protocol    = "tcp"
+    description = "Ingress HTTP to ALB"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    protocol    = "tcp"
+    description = "Ingress HTTP to ALB"
+    from_port   = 80
+    to_port     = 3000
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    protocol         = "tcp"
+    description      = "Ingress Ipv6 traffic to ALB"
+    from_port        = 80
+    to_port          = 80
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = local.tags
+}
+
 resource "aws_security_group" "ecs" {
   name        = "secgroup-gravityboots-ecs-${var.environment}"
   description = "ECS SG"
@@ -392,12 +443,37 @@ resource "aws_security_group" "ecs" {
   }
 
 }
+resource "aws_security_group" "ecs_mockaroo" {
+  name        = "secgroup-mockaroo-ecs-${var.environment}"
+  description = "ECS SG"
+  vpc_id      = aws_vpc.mockaroo.id
+  ingress {
+    protocol        = "tcp"
+    to_port         = 65535
+    from_port       = 0
+    security_groups = [aws_security_group.mockaroo_alb.id]
+  }
+  egress {
+    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 65535
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+}
 resource "aws_lb" "main" {
   name               = "alb-gravityboots"
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.public_0.id, aws_subnet.public_1.id]
   security_groups    = [aws_security_group.alb.id]
+}
+resource "aws_lb" "mockaroo" {
+  name               = "alb-mockaroo"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = [aws_subnet.mockaroo_public_0.id, aws_subnet.mockaroo_public_1.id]
+  security_groups    = [aws_security_group.mockaroo_alb.id]
 }
 
 resource "aws_lb_target_group" "api_01" {
@@ -413,7 +489,13 @@ resource "aws_lb_target_group" "frontend_01" {
   protocol    = "HTTP"
   port        = 3000
   vpc_id      = aws_vpc.main.id
-
+}
+resource "aws_lb_target_group" "mockaroo" {
+  name        = "tg-mockaroo"
+  target_type = "ip"
+  protocol    = "HTTP"
+  port        = 80
+  vpc_id      = aws_vpc.mockaroo.id
 }
 resource "aws_lb_listener" "api" {
   load_balancer_arn = aws_lb.main.arn
@@ -434,43 +516,15 @@ resource "aws_lb_listener" "frontend" {
   }
 }
 
-
-
-
-# resource "aws_lb" "mockaroo" {
-#   name               = "alb-mockaroo"
-#   internal           = false
-#   load_balancer_type = "application"
-#   subnets            = [aws_subnet.mockaroo_0.id, aws_subnet.mockaroo_1.id]
-#   security_groups    = [aws_security_group.alb.id]
-# }
-
-# resource "aws_lb_listener" "api" {
-#   load_balancer_arn = aws_lb.main.arn
-#   port              = 80
-#   protocol          = "HTTP"
-#   default_action {
-#     type = "fixed-response"
-
-#     fixed_response {
-#       content_type = "text/plain"
-#       message_body = "Fixed response content"
-#       status_code  = "200"
-#     }
-#   }
-# }
-# resource "aws_lb_target_group" "mockaroo" {
-#   name        = "tg-gravityboots-mockaroo"
-#   target_type = "ip"
-#   protocol    = "HTTP"
-#   port        = 80
-#   vpc_id      = aws_vpc.mockaroo.id
-# }
-
-# resource "aws_lb_target_group_attachment" "api_0" {
-#   target_group_arn = aws_lb_target_group.api.arn
-#   target_id        = aws_ecs_service.api.
-# }
+resource "aws_lb_listener" "mockaroo" {
+  load_balancer_arn = aws_lb.mockaroo.arn
+  port              = 80
+  protocol          = "HTTP"
+  default_action {
+    target_group_arn = aws_lb_target_group.mockaroo.arn
+    type             = "forward"
+  }
+}
 
 
 resource "aws_db_subnet_group" "db_subnet_group" {
@@ -740,6 +794,12 @@ resource "aws_ecs_task_definition" "mockaroo" {
           "hostPort": 443
         }
       ],
+      "environment": [
+        {
+          "name": "MockarooApi__ApiKey",
+          "value": "${var.mockaroo_api_key}"
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -768,11 +828,11 @@ resource "aws_ecs_service" "mockaroo" {
     subnets          = [aws_subnet.mockaroo_private_1.id, aws_subnet.mockaroo_private_2.id]
     assign_public_ip = true
   }
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.mockaroo.arn
-  #   container_name = "mockaroo"
-  #   container_port = 80
-  # }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.mockaroo.arn
+    container_name = "mockaroo"
+    container_port = 80
+  }
   tags = local.tags
 }
 
@@ -847,39 +907,15 @@ resource "aws_ecs_service" "frontend" {
 
 # Frontend
 resource "aws_cloudfront_origin_access_identity" "oai" {}
-
-resource "aws_s3_bucket" "b" {
-  bucket = "gb-frontend"
-}
-
-resource "aws_s3_bucket_acl" "b_acl" {
-  bucket = aws_s3_bucket.b.id
-  acl    = "private"
-}
-
-data "aws_iam_policy_document" "s3_policy" {
-  statement {
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.b.arn}/*"]
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
-    }
-  }
-}
-
-resource "aws_s3_bucket_policy" "b_policy" {
-  bucket = aws_s3_bucket.b.id
-  policy = data.aws_iam_policy_document.s3_policy.json
-}
-
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = aws_s3_bucket.b.bucket_regional_domain_name
-    origin_id   = local.s3_origin_id
-
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+    domain_name = aws_lb.main.dns_name
+    origin_id   = local.cloudfront_origin_id
+    custom_origin_config {
+      http_port = 3000
+      https_port = 3001
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols = ["TLSv1.2"]
     }
   }
 
@@ -898,7 +934,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
+    target_origin_id = local.cloudfront_origin_id
 
     forwarded_values {
       query_string = false
@@ -919,7 +955,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     path_pattern     = "/content/immutable/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = local.s3_origin_id
+    target_origin_id = local.cloudfront_origin_id
 
     forwarded_values {
       query_string = false
@@ -942,7 +978,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     path_pattern     = "/content/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
+    target_origin_id = local.cloudfront_origin_id
 
     forwarded_values {
       query_string = false
