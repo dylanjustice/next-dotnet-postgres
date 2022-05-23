@@ -1,8 +1,8 @@
 
 locals {
-  cidr_block   = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   cloudfront_origin_id = "djustice-nextapp"
-  region = "us-east-2"
+  region               = "us-east-2"
 
   tags = {
     project = "next-dotnet-postgres"
@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "fargate_assume_role" {
     actions = [
       "sts:AssumeRole"
     ]
-    effect  = "Allow"
+    effect = "Allow"
     principals {
       type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
@@ -55,10 +55,10 @@ data "aws_iam_policy_document" "logs" {
 }
 
 resource "aws_iam_role" "fargate" {
-  name                = "fargate"
-  assume_role_policy  = data.aws_iam_policy_document.fargate_assume_role.json
+  name               = "fargate"
+  assume_role_policy = data.aws_iam_policy_document.fargate_assume_role.json
   inline_policy {
-    name = "AllowCloudwatch"
+    name   = "AllowCloudwatch"
     policy = data.aws_iam_policy_document.logs.json
   }
   path                = "/"
@@ -185,14 +185,14 @@ resource "aws_route_table" "public" {
 resource "aws_route_table" "private_0" {
   vpc_id = aws_vpc.main.id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.main_0.id
   }
 }
 resource "aws_route_table" "private_1" {
   vpc_id = aws_vpc.main.id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.main_1.id
   }
 }
@@ -233,14 +233,37 @@ resource "aws_route_table" "mockaroo_private" {
   vpc_id = aws_vpc.mockaroo.id
   route  = []
 }
-
-resource "aws_route_table_association" "mockaroo_private_00" {
-  subnet_id      = aws_subnet.mockaroo_private_1.id
-  route_table_id = aws_route_table.mockaroo_private.id
+resource "aws_route_table" "mockaroo_private_0" {
+  vpc_id = aws_vpc.mockaroo.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.mockaroo_0.id
+  }
 }
-resource "aws_route_table_association" "mockaroo_private_01" {
+resource "aws_route_table" "mockaroo_private_1" {
+  vpc_id = aws_vpc.mockaroo.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.mockaroo_1.id
+  }
+}
+
+resource "aws_route_table_association" "mockaroo_public_0" {
+  subnet_id      = aws_subnet.mockaroo_public_0.id
+  route_table_id = aws_route_table.mockaroo_public.id
+}
+resource "aws_route_table_association" "mockaroo_public_1" {
+  subnet_id      = aws_subnet.mockaroo_public_1.id
+  route_table_id = aws_route_table.mockaroo_public.id
+}
+
+resource "aws_route_table_association" "mockaroo_private_0" {
+  subnet_id      = aws_subnet.mockaroo_private_1.id
+  route_table_id = aws_route_table.mockaroo_private_0.id
+}
+resource "aws_route_table_association" "mockaroo_private_1" {
   subnet_id      = aws_subnet.mockaroo_private_2.id
-  route_table_id = aws_route_table.mockaroo_private.id
+  route_table_id = aws_route_table.mockaroo_private_1.id
 }
 
 resource "aws_network_acl" "main" {
@@ -551,31 +574,6 @@ resource "aws_db_instance" "db" {
   tags                   = local.tags
 }
 
-# EC2
-## Security Group
-resource "aws_security_group" "allow_tls" {
-  name        = "allow_tls"
-  description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [local.cidr_block]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-  tags = local.tags
-}
-
 # API
 # Elastic container registry
 resource "aws_ecr_repository" "api" {
@@ -744,7 +742,7 @@ resource "aws_ecs_service" "api" {
     weight            = 100
   }
   network_configuration {
-    subnets = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+    subnets         = [aws_subnet.private_00.id, aws_subnet.private_10.id]
     security_groups = [aws_security_group.ecs.id]
   }
   load_balancer {
@@ -825,13 +823,13 @@ resource "aws_ecs_service" "mockaroo" {
     weight            = 100
   }
   network_configuration {
-    subnets          = [aws_subnet.mockaroo_private_1.id, aws_subnet.mockaroo_private_2.id]
-    assign_public_ip = true
+    subnets         = [aws_subnet.mockaroo_private_1.id, aws_subnet.mockaroo_private_2.id]
+    security_groups = [aws_security_group.ecs_mockaroo.id]
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.mockaroo.arn
-    container_name = "mockaroo"
-    container_port = 80
+    container_name   = "mockaroo"
+    container_port   = 80
   }
   tags = local.tags
 }
@@ -894,7 +892,7 @@ resource "aws_ecs_service" "frontend" {
     weight            = 100
   }
   network_configuration {
-    subnets          = [aws_subnet.private_00.id, aws_subnet.private_10.id]
+    subnets         = [aws_subnet.private_00.id, aws_subnet.private_10.id]
     security_groups = [aws_security_group.ecs.id]
   }
   load_balancer {
@@ -912,10 +910,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     domain_name = aws_lb.main.dns_name
     origin_id   = local.cloudfront_origin_id
     custom_origin_config {
-      http_port = 3000
-      https_port = 3001
+      http_port              = 3000
+      https_port             = 3001
       origin_protocol_policy = "http-only"
-      origin_ssl_protocols = ["TLSv1.2"]
+      origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
 

@@ -14,5 +14,7 @@ RUN dotnet publish --configuration release -o release
 FROM base as final
 WORKDIR /api
 COPY --from=publish /api/release .
+EXPOSE 80
+EXPOSE 443
 ENTRYPOINT [ "dotnet", "Web.dll" ]
 

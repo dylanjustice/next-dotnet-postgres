@@ -15,5 +15,8 @@ FROM base as final
 WORKDIR /api
 COPY --from=publish /api/release .
 
+EXPOSE 80
+EXPOSE 443
+
 ENTRYPOINT [ "dotnet", "DylanJustice.Demo.Presentation.Web.dll" ]
 
