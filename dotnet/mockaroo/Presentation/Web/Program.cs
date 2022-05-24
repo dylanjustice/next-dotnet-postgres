@@ -1,4 +1,5 @@
 using Data.Mockaroo.Startup;
+using Microsoft.AspNetCore.HttpOverrides;
 using Mockaroo.Business.Conductors.Extensions;
 using Mockaroo.Presentation.Web.Constants;
 using Serilog;
@@ -31,8 +32,18 @@ builder.Host.UseSerilog((ctx, lc) => lc
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
