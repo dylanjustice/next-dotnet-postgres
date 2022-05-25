@@ -19,7 +19,7 @@ static_resources:
               - "*"
               routes:
               - match:
-                  prefix: "/api/v1"
+                  prefix: "/"
                 route:
                   cluster: local_service
           http_filters:
@@ -37,7 +37,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: 127.0.0.1
+                address: gravityboots
                 port_value: 80
 admin:
   address:

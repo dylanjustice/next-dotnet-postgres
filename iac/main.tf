@@ -538,14 +538,14 @@ resource "aws_lb_target_group" "api_envoy" {
   name        = "tg-gravityboots-api-envoy"
   target_type = "ip"
   protocol    = "HTTP"
-  port        =
+  port        = 3500
   vpc_id      = aws_vpc.main.id
 }
 resource "aws_lb_target_group" "api_envoy_admin" {
   name        = "tg-gravityboots-api-envoy-admin"
   target_type = "ip"
   protocol    = "HTTP"
-  port        = 8001
+  port        = 8081
   vpc_id      = aws_vpc.main.id
 }
 resource "aws_lb_target_group" "frontend_01" {
@@ -936,6 +936,10 @@ resource "aws_ecs_task_definition" "front_proxy" {
         {
           "containerPort": 80,
           "hostPort": 80
+        },
+        {
+          "containerPort": 8081,
+          "hostPort": 8081
         }
       ],
       "environment": [
