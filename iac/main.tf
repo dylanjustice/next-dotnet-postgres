@@ -781,19 +781,19 @@ resource "aws_ecs_task_definition" "api" {
     },
     {
       "image": "${aws_ecr_repository.envoy_dotnet_api.repository_url}:latest",
-      "name": "envoy",
+      "name": "envoy"
       "portMappings": [
         {
-          "hostPort": 3500,
+          "hostPort": 80,
           "protocol": "tcp",
-          "containerPort": 3500
+          "containerPort": 80
         },
         {
           "hostPort": 8081,
           "protocol": "tcp",
           "containerPort": 8081
         }
-      ]
+      ],
     }
 
   ]
@@ -879,19 +879,19 @@ resource "aws_ecs_task_definition" "mockaroo" {
     },
     {
       "image": "${aws_ecr_repository.envoy_mockaroo.repository_url}:latest",
-      "name": "envoy",
+      "name": "envoy"
       "portMappings": [
         {
-          "hostPort": 3500,
+          "hostPort": 80,
           "protocol": "tcp",
-          "containerPort": 3500
+          "containerPort": 80
         },
         {
           "hostPort": 8081,
           "protocol": "tcp",
           "containerPort": 8081
         }
-      ]
+      ],
     }
   ]
   TASK_DEFINITION
