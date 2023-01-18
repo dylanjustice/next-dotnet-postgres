@@ -19,7 +19,7 @@ static_resources:
               - "*"
               routes:
               - match:
-                  prefix: "/"
+                  prefix: "/api/v1"
                 route:
                   cluster: service1
           http_filters:
