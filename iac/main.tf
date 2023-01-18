@@ -409,8 +409,8 @@ resource "aws_security_group" "alb" {
   ingress {
     protocol    = "tcp"
     description = "Ingress HTTP to ALB"
-    from_port   = 8001
-    to_port     = 8001
+    from_port   = 8081
+    to_port     = 8081
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
@@ -538,14 +538,14 @@ resource "aws_lb_target_group" "api_envoy" {
   name        = "tg-gravityboots-api-envoy"
   target_type = "ip"
   protocol    = "HTTP"
-  port        =
+  port        = 3500
   vpc_id      = aws_vpc.main.id
 }
 resource "aws_lb_target_group" "api_envoy_admin" {
   name        = "tg-gravityboots-api-envoy-admin"
   target_type = "ip"
   protocol    = "HTTP"
-  port        = 8001
+  port        = 8081
   vpc_id      = aws_vpc.main.id
 }
 resource "aws_lb_target_group" "frontend_01" {
@@ -750,31 +750,6 @@ resource "aws_ecr_repository" "envoy_mockaroo" {
   }
   tags = local.tags
 }
-resource "aws_ecr_repository" "gb_front_proxy" {
-  name                 = "gb-front-proxy"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-  encryption_configuration {
-    encryption_type = "KMS"
-  }
-  tags = local.tags
-}
-resource "aws_ecr_repository" "mockaroo_front_proxy" {
-  name                 = "mockaroo-front-proxy"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-  encryption_configuration {
-    encryption_type = "KMS"
-  }
-  tags = local.tags
-}
-
 
 # ECS
 resource "aws_cloudwatch_log_group" "ecs" {
@@ -916,83 +891,24 @@ resource "aws_ecs_task_definition" "api" {
   ]
   TASK_DEFINITION
 }
-resource "aws_ecs_task_definition" "front_proxy" {
-  family                   = "taskdef-gb-front-${var.environment}"
-  requires_compatibilities = ["FARGATE"]
-  runtime_platform {
-    operating_system_family = "LINUX"
-    cpu_architecture        = "X86_64"
-  }
-  cpu                   = 1024
-  memory                = 2048
-  network_mode          = "awsvpc"
-  execution_role_arn    = aws_iam_role.fargate.arn
-  container_definitions = <<TASK_DEFINITION
-  [
-    {
-      "name": "gravityboots-front",
-      "image": "${aws_ecr_repository.gb_front_proxy.repository_url}:latest",
-      "portMappings": [
-        {
-          "containerPort": 80,
-          "hostPort": 80
-        }
-      ],
-      "environment": [
-        {
-          "name": "ENVOY_UID",
-          "value": "0"
-        }
-      ],
-       "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/aws/ecs/gravityboots-front",
-          "awslogs-region": "us-east-2",
-          "awslogs-create-group": "true",
-          "awslogs-stream-prefix": "gravityboots-front"
-        }
-      }
-    }
-  ]
-  TASK_DEFINITION
-}
 
-resource "aws_service_discovery_private_dns_namespace" "main" {
-  name = "gravityboots"
-  vpc = aws_vpc.main.id
-}
-resource "aws_service_discovery_private_dns_namespace" "mockaroo" {
-  name = "mockaroo"
-  vpc = aws_vpc.mockaroo.id
-}
+# resource "aws_service_discovery_private_dns_namespace" "main" {
+#   name = "gravityboots"
+#   vpc = aws_vpc.main.id
+# }
 
-resource "aws_service_discovery_service" "main" {
-  name = "svc-discovery-gb-${var.environment}"
-  namespace_id = aws_service_discovery_private_dns_namespace.main.id
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.main.id
-    dns_records {
-      ttl = 10
-      type = "A"
-    }
-  }
+# resource "aws_service_discovery_service" "main" {
+#   name = "svc-discovery-gb-${var.environment}"
+#   namespace_id = aws_service_discovery_http_namespace.main.id
+#   dns_config {
 
-  tags = local.tags
-}
-resource "aws_service_discovery_service" "mockaroo" {
-  name = "svc-discovery-mockaroo-${var.environment}"
-  namespace_id = aws_service_discovery_private_dns_namespace.mockaroo.id
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.mockaroo.id
-    dns_records {
-      ttl = 10
-      type = "A"
-    }
-  }
+#     dns_records {
 
-  tags = local.tags
-}
+#     }
+
+#   }
+#   tags = local.tags
+# }
 
 resource "aws_ecs_service" "api" {
   name            = "service-gb-api-${var.environment}"
@@ -1008,36 +924,13 @@ resource "aws_ecs_service" "api" {
     subnets         = [aws_subnet.private_00.id, aws_subnet.private_10.id]
     security_groups = [aws_security_group.ecs.id]
   }
-  service_registries {
-    registry_arn = aws_service_discovery_service.main.arn
+  load_balancer {
+    target_group_arn = aws_lb_target_group.api_01.arn
+    container_name   = "dotnet-api"
+    container_port   = 80
   }
 
   tags = local.tags
-}
-
-resource "aws_ecs_service" "api_front_proxy" {
-  name = "service-gb-front-${var.environment}"
-  cluster = aws_ecs_cluster.api.id
-  task_definition = aws_ecs_task_definition.front_proxy.id
-  desired_count = 2
-  capacity_provider_strategy {
-    base              = 1
-    capacity_provider = "FARGATE"
-    weight            = 100
-  }
-  network_configuration {
-    subnets         = [aws_subnet.private_00.id, aws_subnet.private_10.id]
-    security_groups = [aws_security_group.ecs.id]
-  }
-  load_balancer {
-    target_group_arn = aws_lb_target_group.api_01.arn
-    container_name   = "gravityboots-front"
-    container_port   = 80
-  }
-  service_registries {
-    registry_arn = aws_service_discovery_service.main.arn
-  }
-
 }
 
 resource "aws_ecs_cluster_capacity_providers" "mockaroo" {
