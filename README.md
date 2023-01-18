@@ -1,11 +1,14 @@
 # Cloud Native Three Layer App
 
 ## Application Stack
-* .Net 6
-* NextJS
-* PostgresSQL
+
+- .Net 6
+- NextJS
+- PostgresSQL
 
 ## AWS Architectural Plan
-* .NET 6 API deployed to AWS Fargate
-* NextJS frontend deployed to S3, delivered through Cloudfront CDN
-* PostgreSQL deployed to AWS RDS
+
+- .NET 5 API deployed to ECS with Fargate
+- .NET 6 Peer (Mock 3rd party) API deployed to ECS with Fargate
+- NextJS frontend deployed to ECS with Fargate delivered through Cloudfront CDN
+- PostgreSQL deployed to AWS RDS
