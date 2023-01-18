@@ -23,6 +23,7 @@ namespace DylanJustice.Demo.Presentation.Web
                 .CreateDefaultBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .UseSerilog();
 

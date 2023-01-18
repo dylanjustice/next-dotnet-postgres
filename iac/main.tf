@@ -400,20 +400,6 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    protocol    = "tcp"
-    description = "Ingress HTTP to ALB"
-    from_port   = 3500
-    to_port     = 3500
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    protocol    = "tcp"
-    description = "Ingress HTTP to ALB"
-    from_port   = 8081
-    to_port     = 8081
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
     protocol         = "tcp"
     description      = "Ingress Ipv6 traffic to ALB"
     from_port        = 80
@@ -437,20 +423,6 @@ resource "aws_security_group" "mockaroo_alb" {
     description = "Ingress HTTP to ALB"
     from_port   = 80
     to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    protocol    = "tcp"
-    description = "Ingress HTTP to ALB"
-    from_port   = 3500
-    to_port     = 3500
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    protocol    = "tcp"
-    description = "Ingress HTTP to ALB"
-    from_port   = 8081
-    to_port     = 8081
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
@@ -534,20 +506,6 @@ resource "aws_lb_target_group" "api_01" {
   port        = 80
   vpc_id      = aws_vpc.main.id
 }
-resource "aws_lb_target_group" "api_envoy" {
-  name        = "tg-gravityboots-api-envoy"
-  target_type = "ip"
-  protocol    = "HTTP"
-  port        = 3500
-  vpc_id      = aws_vpc.main.id
-}
-resource "aws_lb_target_group" "api_envoy_admin" {
-  name        = "tg-gravityboots-api-envoy-admin"
-  target_type = "ip"
-  protocol    = "HTTP"
-  port        = 8081
-  vpc_id      = aws_vpc.main.id
-}
 resource "aws_lb_target_group" "frontend_01" {
   name        = "tg-gravityboots-frontend-01"
   target_type = "ip"
@@ -562,44 +520,12 @@ resource "aws_lb_target_group" "mockaroo" {
   port        = 80
   vpc_id      = aws_vpc.mockaroo.id
 }
-resource "aws_lb_target_group" "mockaroo_envoy" {
-  name        = "tg-mockaroo-envoy"
-  target_type = "ip"
-  protocol    = "HTTP"
-  port        = 3500
-  vpc_id      = aws_vpc.mockaroo.id
-}
-resource "aws_lb_target_group" "mockaroo_envoy_admin" {
-  name        = "tg-mockaroo-envoy-admin"
-  target_type = "ip"
-  protocol    = "HTTP"
-  port        = 8081
-  vpc_id      = aws_vpc.mockaroo.id
-}
 resource "aws_lb_listener" "api" {
   load_balancer_arn = aws_lb.main.arn
   port              = 80
   protocol          = "HTTP"
   default_action {
     target_group_arn = aws_lb_target_group.api_01.arn
-    type             = "forward"
-  }
-}
-resource "aws_lb_listener" "api_envoy" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = 3500
-  protocol          = "HTTP"
-  default_action {
-    target_group_arn = aws_lb_target_group.api_envoy.arn
-    type             = "forward"
-  }
-}
-resource "aws_lb_listener" "api_envoy_admin" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = 8081
-  protocol          = "HTTP"
-  default_action {
-    target_group_arn = aws_lb_target_group.api_envoy_admin.arn
     type             = "forward"
   }
 }
@@ -628,24 +554,6 @@ resource "aws_lb_listener" "mockaroo" {
   protocol          = "HTTP"
   default_action {
     target_group_arn = aws_lb_target_group.mockaroo.arn
-    type             = "forward"
-  }
-}
-resource "aws_lb_listener" "mockaroo_envoy" {
-  load_balancer_arn = aws_lb.mockaroo.arn
-  port              = 3500
-  protocol          = "HTTP"
-  default_action {
-    target_group_arn = aws_lb_target_group.mockaroo.arn
-    type             = "forward"
-  }
-}
-resource "aws_lb_listener" "mockaroo_envoy_admin" {
-  load_balancer_arn = aws_lb.mockaroo.arn
-  port              = 8081
-  protocol          = "HTTP"
-  default_action {
-    target_group_arn = aws_lb_target_group.mockaroo_envoy_admin.arn
     type             = "forward"
   }
 }
@@ -891,24 +799,6 @@ resource "aws_ecs_task_definition" "api" {
   ]
   TASK_DEFINITION
 }
-
-# resource "aws_service_discovery_private_dns_namespace" "main" {
-#   name = "gravityboots"
-#   vpc = aws_vpc.main.id
-# }
-
-# resource "aws_service_discovery_service" "main" {
-#   name = "svc-discovery-gb-${var.environment}"
-#   namespace_id = aws_service_discovery_http_namespace.main.id
-#   dns_config {
-
-#     dns_records {
-
-#     }
-
-#   }
-#   tags = local.tags
-# }
 
 resource "aws_ecs_service" "api" {
   name            = "service-gb-api-${var.environment}"
