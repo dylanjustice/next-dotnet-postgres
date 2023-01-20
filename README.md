@@ -3,7 +3,7 @@
 ## Application Stack
 
 - .Net 6
-- NextJS
+- NextJS 13
 - PostgresSQL
 
 ## AWS Architectural Plan
